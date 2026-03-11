@@ -1,0 +1,29 @@
+{
+  "name": "gams",
+  "version": "0.0.1",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "turbo build",
+    "dev": "turbo dev",
+    "lint": "turbo lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md,json}\"",
+    "manage": "turbo dev --filter=manage",
+    "company": "turbo dev --filter=company",
+    "public": "turbo dev --filter=public-portal",
+    "buyer": "turbo dev --filter=buyer"
+  },
+  "devDependencies": {
+    "pg": "^8.20.0",
+    "prettier": "^3.3.3",
+    "turbo": "^2.3.3",
+    "typescript": "^5.6.3"
+  },
+  "packageManager": "npm@10.9.0",
+  "engines": {
+    "node": ">=20"
+  }
+}

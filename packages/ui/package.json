@@ -1,0 +1,30 @@
+{
+  "name": "@gams/ui",
+  "version": "0.0.1",
+  "private": true,
+  "main": "./index.tsx",
+  "types": "./index.tsx",
+  "exports": {
+    ".": "./index.tsx",
+    "./header": "./components/GovHeader.tsx",
+    "./bento": "./components/BentoGrid.tsx",
+    "./badge": "./components/Badge.tsx",
+    "./stat-card": "./components/StatCard.tsx",
+    "./sidebar": "./components/Sidebar.tsx"
+  },
+  "dependencies": {
+    "@gams/types": "*",
+    "@gams/i18n": "*",
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^2.5.4",
+    "lucide-react": "^0.468.0",
+    "framer-motion": "^11.12.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "typescript": "^5.6.3"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0"
+  }
+}

@@ -1,0 +1,298 @@
+Plan: GAMS — Government Asset Management System
+4 separate portals. No overlap. White theme. Saffron/Green/Gold. Built for scale (millions of records).
+
+Portal	Subdomain	Who Uses It	Account Creation
+Management	manage.gams.gov.in	Super Admin, Dept Admins, Volunteers, Inspectors, Warehouse Staff	Government-created only
+Company	company.gams.gov.in	Supplier companies with government orders	Self-register → Govt approves
+Public	public.gams.gov.in	General citizens — buy discounted products	Self-register, Aadhaar OTP
+Buyer/Institution	buyer.gams.gov.in	NGOs, Private Cos., Govt Institutions	Self-register → Document verified by Govt
+
+Registration Forms
+Public Citizen (14 fields)
+Full Name (as per Aadhaar)
+Date of Birth
+Gender (Male / Female / Transgender / Prefer not to say)
+Aadhaar Number → OTP verified → address auto-fills
+PAN Card (optional, required for purchases above ₹2L)
+Email ID → OTP verified
+Mobile Number → OTP verified (linked to Aadhaar)
+Permanent Address (auto-filled from Aadhaar)
+State / District / City / PIN
+Correspondence Address (if different)
+Profile Photo (optional)
+Preferred Language (Hindi / English)
+Password + Confirm Password
+Security Question + Answer
+Institution / NGO / Private Org — 50 fields across 6 sections
+Section 1 — Organization Identity
+
+Legal Name
+Organization Type (Pvt Ltd / LLP / OPC / Partnership / Trust / Society / Section 8 / NGO / Other)
+CIN / Society Reg. No. / Trust Deed No.
+GSTIN (15-digit, validated)
+PAN of Organization
+TAN Number
+Year of Establishment
+Nature of Business / Sector
+Annual Turnover (range)
+Employee Count (range)
+MSME Registration No.
+ISO Certification No. + Issuing Body
+FCRA No. (NGOs with foreign funding)
+80G / 12A / 12AA Certificate No.
+Previous Government Purchase/Supply References (optional)
+Section 2 — Address
+16. Registered Office Address
+17. Operational Address (if different)
+18. State / District / City / PIN
+
+Section 3 — Contact
+19. Official Organization Email (official domain preferred)
+20. Official Phone No.
+21. Website URL
+22. Social Media Links (optional)
+
+Section 4 — Authorized Signatory
+23. Full Name
+24. Designation
+25. Aadhaar → OTP verified
+26. PAN
+27. Mobile → OTP verified
+28. Email → OTP verified
+29. Digital Signature (DSC) (optional)
+
+Section 5 — Key Personnel
+30. Director 1 Name + DIN
+31. Director 2 Name + DIN (optional)
+32. Trustee / Committee Member Names (NGOs/Trusts)
+
+Section 6 — Bank Details
+33. Bank Account No.
+34. IFSC (auto-fetches bank + branch)
+35. Account Holder Name
+36. Account Type (Current / Savings)
+37. Cancelled Cheque Upload
+
+Document Uploads (DigiLocker preferred, manual fallback)
+38. Certificate of Incorporation / Registration Certificate
+39. MOA / AOA / Trust Deed
+40. GST Registration Certificate
+41. Last 2 Years ITR (optional, boosts credibility score)
+42. Organization Logo
+
+Supplier Company — All Institution fields + 8 more
+GeM Registration ID
+Product Categories Supplied (multi-select)
+Warehouse / Factory Addresses
+Quality Certifications (BIS / ISI / ISO 9001 etc.)
+Past Government Order Numbers (for reference)
+Authorized Sales Contact Name / Phone / Email
+Logistics Partners (optional)
+Company Brochure / Catalog PDF
+Product Unique ID Format
+QR payload = HMAC-SHA256 signed JWT containing unique ID + product hash. Cannot be forged.
+
+Rating Scale & Pricing
+Rating	Label	Meaning	Sale Channel	Default Price %
+10	Mint — Never Used	Unused, no defects	Public + Institution + Freebie	50%
+9	Unused — Minor Defect	Never deployed, storage/mfg issue	Public + Institution + Freebie	42%
+8	Used — Excellent	Used, looks nearly new	Public + Institution + Freebie	35%
+7	Used — Good	Light wear, fully functional	Public + Institution + Freebie	28%
+6	Used — Fair	Moderate wear, functional	Institution + Freebie only	20%
+5	Used — Acceptable	Heavy wear, works with minor faults	Freebie only	10%
+1–4	Condemned	Beyond reuse	GFR Write-off	—
+All % are of original government purchase price. Admin can override per listing. GFR minimum reserve price enforced as floor.
+
+Marketplace Product Listing (Public + Buyer Portals)
+Each product card / detail page shows:
+
+Photos: Delivery photo (captured when company delivered to government warehouse) + Inspector's condition photos (post-event). Not the manufacturer's stock image.
+Stock by rating tier — e.g., Rating 10: 45 units | Rating 8: 120 units | Rating 7: 67 units
+Price per rating tier — Tier selector before Add to Cart
+Product Variants — Color, Size, Material, Model No., Specs (entered by company at listing)
+Product ID (GOI-... format, scan-verifiable)
+Category + Subcategory
+Event History — "Used at: National Youth Festival 2025, Pune" (read-only)
+Inspector Condition Notes — written by inspector post-event
+Company Name — who supplied it
+Original Government Purchase Price — shown for transparency
+Quantity selector — select rating tier → quantity → Add to Cart
+QR Code — What Each Role Sees After Scanning
+When any user scans a QR code at manage.gams.gov.in/scan, the system reads their session role and renders a different action panel — same QR, different UI:
+
+Role	Actions Available on Scan
+Company Staff	Confirm delivery, enter delivered quantity, flag manufacturing defect
+Warehouse Staff	Receive into warehouse, assign Zone + Shelf, mark dispatched to event
+Volunteer	Mark Active, update current condition (dropdown), log defect + repair cost + photo, request repair crew
+Inspector	Rate 1–10 (visual slider), write condition notes, upload current photo, mark Condemned/Lost
+Govt Admin	View full lifecycle history, reassign to event/area/warehouse, override any status, initiate GFR disposal
+Super Admin	All above + delete record, merge duplicate entries
+Public / Buyer	Read-only: product details, rating, current price — no edit access
+Every scan action writes to audit_logs automatically: who, when, GPS (if permitted), previous value → new value.
+
+Development Phases
+Phase 1 — Monorepo Foundation (Blocks all other phases)
+Goal: Running skeleton of all 4 portals with shared design system
+
+Turborepo monorepo setup — 4 Next.js 14 apps (manage, company, public, buyer) + shared packages: packages/ui, packages/lib, packages/types, packages/i18n
+Tailwind config with Saffron/Green/Gold token system shared across all apps
+Shadcn/ui installed + overridden — no blue/purple/navy colors anywhere
+Bento grid base components (dashboard cards, stat tiles) in packages/ui
+Government Header component — Ashoka Chakra SVG + "भारत सरकार / Government of India" + portal name
+Supabase project creation — enable Auth, Storage, Realtime; configure custom SMTP
+Database schema — all tables created via migrations with RLS policies per role
+Environment config per portal (separate Supabase anon keys per subdomain)
+Auth middleware — role-based routing guards per portal (unauthorized → redirect)
+Hindi + English i18n string files scaffolded in packages/i18n
+Relevant files: apps/manage/, apps/company/, apps/public/, apps/buyer/, packages/ui/, supabase/migrations/
+
+Phase 2 — Registration & Identity Flows (Depends on Phase 1)
+Goal: All 4 user types can register and get verified
+
+Public registration form — 14-field multi-step with Aadhaar OTP + email OTP + address auto-fill
+Institution registration form — 6-section, 42-field, progress-saved, DigiLocker pull integration + manual file upload fallback
+Company registration form — extends institution form with 8 company-specific fields
+Internal user creation panel in Management portal — Govt Admin creates Volunteer / Inspector / Warehouse Staff accounts; sends email invite
+Govt admin verification dashboard — review company + institution registrations, approve/reject with typed reason + timestamp
+DigiLocker API integration — pull CIN, GST cert, Aadhaar address from DigiLocker (OAuth flow)
+Phone OTP for public users — Supabase Auth SMS OTP, pluggable UIDAI connector (stub for now pending API keys)
+Credibility score computed at institution approval — based on ITR, GSTIN age, MSME status, past orders
+
+
+Phase 3 — Company Portal & Product Registry (Depends on Phase 2)
+Goal: Companies can list products, upload in bulk, and get QR codes
+
+Company dashboard — listings overview, pending approvals, batch job progress, order history
+Individual product listing form — name, category, type (disposable/reusable), variants (color, size, material, model, specs), price, MFG year, description, delivery photo upload
+Price threshold logic: unit price > ₹5,000 (admin-configurable) → individual tracking; below → batch tracking
+CSV bulk upload — downloadable template, upload + validate, async Edge Function job for ID generation
+Unique ID engine: {GOV-SCOPE}-{CO_CODE}-{TYPE}-{CAT}-{YEAR}-{SEQNO} — SEQNO global auto-increment per category
+QR generation: qrcode library, payload = HMAC-SHA256 signed JWT (ID + hash + expiry), stored in Supabase Storage
+Print-ready QR label PDF export — A4 sheet + Dymo label formats
+Batch job progress tracker on dashboard ("Generating 273,839 IDs... 61% complete")
+Govt admin product approval queue — approve/reject per item or bulk, rejected items notify company
+
+
+Phase 4 — Warehousing & Delivery Confirmation (Depends on Phase 3)
+Goal: Products move from company → government warehouse → tracked
+
+Warehouse Staff scan interface — camera QR scanner, receive product into warehouse
+Assign Zone + Shelf to each scanned item (dropdown, warehouse layout configurable by admin)
+Warehouse dashboard — stock counts per category, per rating, per zone
+Delivery confirmation by company — scan or CSV confirm delivered quantities, flag any manufacturing defects on delivery
+Govt admin delivery verification — confirm receipt, raise dispute if quantity mismatch
+Stock status: Pending Delivery → In Warehouse → Assigned to Event → Active → Post-Event → Redistributed / Condemned
+
+
+Phase 5 — Event Management (Depends on Phase 4)
+Goal: Events created, assets assigned, volunteers deployed
+
+Event creation form — name, type (national/state/sports/cultural/disaster relief/institutional), government level (central/state/municipal), location, start/end dates, expected attendance
+Sub-area management within event — create zones, assign volunteer per zone
+Asset assignment to event — search by product ID / category, bulk assign, move from warehouse to event
+Volunteer/Inspector assignment to event areas — govt admin assigns from internal users
+Event dashboard (bento grid) — assets per area, active/inactive counts, open defects, missing alerts
+Event status lifecycle: Planning → Active → Closed → Archived
+
+
+Phase 6 — QR Scanning & Role-Based Actions (Depends on Phases 4 + 5)
+Goal: Any authorized person scans QR → sees their role-specific action panel
+
+Unified scan page at /scan in management portal — html5-qrcode camera scanner
+QR payload validation — verify HMAC signature server-side before showing any data
+Role-based action panel renderer — same scan route, different UI component per role
+Volunteer flow: scan → Mark Active → condition dropdown → defect form (description + repair cost + photo upload) → submit → audit log
+Warehouse flow: scan → receive / dispatch → zone/shelf assignment → audit log
+Company flow: scan → confirm delivery → quantity entry → defect flag → audit log
+Inspector flow: scan → rating slider (1–10 with labels) → notes → condition photo → mark Condemned/Lost → audit log
+Govt Admin flow: scan → full lifecycle history view → reassign / override status → initiate disposal → audit log
+Batch disposable scan — scan batch QR → mark entire batch active in one action
+All scans write to scans table + audit_logs table (append-only, never updated)
+GPS capture on scan (browser Geolocation API, permission prompt)
+
+
+Phase 7 — Post-Event Processing (Depends on Phase 6)
+Goal: After event closes, all assets are rated, missing flagged, condemned tagged
+
+Event closure flow — admin marks event as Ended; system locks new scans for that event
+Missing item auto-detection — items scanned Active at event start but not scanned at closure → auto-flagged as "Potentially Missing", admin confirms
+Inspector rating queue — list of all assets from closed event, one-by-one or bulk rating entry
+Rating UI — visual 1–10 slider with color-coded label (green→red), condition notes textarea, current photo upload
+Condemned tagging — reason selection + written note, permanently locked from redistribution
+Post-event summary report — auto-generated PDF: total assets, ratings distribution, repair costs, lost items, estimated redistribution value
+
+
+Phase 8 — Redistribution & Marketplace (Depends on Phase 7)
+Goal: Rated products listed for public sale, institution allocation, freebies
+
+Pricing engine — original_price × rating_multiplier auto-applied; GFR minimum reserve floor enforced (default 33% of original, admin-configurable); admin can override per listing
+Public marketplace — bento grid product cards, filter by category / rating / price / location / condition, full-text search
+Product detail page — delivery photo + condition photos, stock by rating tier, price by rating tier, variant selector (color/size/specs), event history, inspector notes, company name, original price (transparency)
+Cart + Checkout — item selection with tier/variant/quantity, Razorpay payment (UPI, cards, net banking, EMI for high-value items)
+Order management — Pending → Approved → Dispatched → In Transit → Delivered; buyer tracks per order
+Delivery tracking — internal status updates; stub for India Post / courier API integration
+Institution allocation flow — institution browses available stock, submits requirement request (item, quantity, purpose, justification), govt admin reviews, allocates, marks as assigned
+Freebie assignment — govt admin selects beneficiary category (e.g. NGO, disaster relief), assigns items, audit trail, donation certificate PDF auto-generated
+Disposal certificate — GFR-compliant PDF generated on every sale/allocation, downloadable by buyer and admin
+Return / grievance — buyer can raise grievance against a purchased item post-delivery
+
+
+Phase 9 — Public Portal Homepage & Citizen UX (Parallel with Phase 8)
+Goal: Compelling, informative, transparent public homepage
+
+Hero section — "India's First Government Asset Transparency & Resale Platform"
+Live stats ticker — ₹ worth of assets tracked, items redistributed, ₹ recovered via resale, events covered (auto-updated from DB views)
+"How It Works" — 4-step visual (Company supplies → Government uses → Inspector rates → You buy)
+Featured products grid — top-rated, recently listed, most viewed
+Category browser — Electronics, Furniture, Textiles, Vehicles, Equipment, Appliances...
+Transparency section — "Recent Government Purchases" (public info per GFR); open data download
+FAQ, About GAMS, Ministry info, Grievance portal link
+Footer — Jai Hind, GIGW compliance, NIC hosted badge, accessibility statement
+
+
+Phase 10 — Management Portal Homepage & Analytics (Depends on Phases 5–8)
+Goal: Clean, functional management dashboard (no marketing fluff)
+
+Management portal homepage — compact bento grid: Pending Approvals (count), Active Events, Assets In Stock, Open Defects, Awaiting Rating, Recent Scans (live)
+Super Admin analytics — total asset value tracked, event-wise procurement spend, redistribution revenue recovered, lost/condemned rate, top companies by volume
+Dept admin analytics — assets owned by dept, currently in event, in warehouse, redistributed
+Company analytics — total products listed, approval rate, which events used their products, repair cost totals
+Export — CSV and PDF reports per event / per department / per year / per company
+Audit log explorer — searchable, filterable, exportable — every action ever taken
+
+
+Phase 11 — Buyer/Institution Portal (Parallel with Phase 8)
+Goal: Dedicated B2B and NGO portal, separate from public
+
+Institution homepage — mission statement, how allocation works, verification status info, active allocation notices from govt
+Browse available stock — filter by quantity range, category, region, condition, eligibility (some items institution-only)
+Requirement request form — specify items + quantity + purpose + justification + delivery address + timeline
+My Allocations dashboard — track what's been allocated and delivery status
+Documents section — view/update/re-upload verification documents
+Institution analytics — total items received, total value received, pending requests
+
+
+Phase 12 — Hardening, Compliance & Scale (Final phase)
+Goal: Production-ready, secure, accessible, compliant
+
+Full RLS audit — verify no cross-portal, cross-department data leaks
+Zod validation on every API route, Edge Function, and CSV import path
+Rate limiting on all public endpoints (Edge Function middleware)
+QR tamper detection live test — forged QR attempts logged and blocked
+PostgreSQL product_instances table partitioned by mfg_year for million-record scale
+pg_trgm trigram indexes for fuzzy product ID and name search
+Virtualized TanStack Table tested with 500K+ row datasets
+Full i18n completion — every UI string in Hindi + English
+WCAG 2.1 AA accessibility audit (government websites legally required under Policy on Open Standards)
+GIGW (Guidelines for Indian Government Websites) compliance check
+Security audit — OWASP Top 10, input sanitization, CSRF, XSS, SQL injection checks
+Load testing — simulate 100K concurrent users on public marketplace
+Staging deployment on NIC (National Informatics Centre) compatible infrastructure
+Documentation — API docs, admin user manual (PDF, Hindi + English)
+
+Scope Boundaries
+In: All 4 portals, all registration + verification flows, full asset lifecycle, QR + role-based scanning, bulk CSV import + async QR generation, marketplace + payment + delivery, institution allocation, freebies, audit trail, analytics, Hindi+English, GFR compliance docs, WCAG + GIGW.
+
+Out (Phase 2 / Future): Full UIDAI Aadhaar XML API (needs govt API keys — stubbed), India Post logistics API (stubbed), mobile apps (Android/iOS), SMS alerts, regional languages beyond Hindi+English, disaster relief special workflow, GeM catalog import.
+
+Ready to approve and hand off to implementation?
