@@ -7,7 +7,7 @@ export const RATING_CONFIG: Record<ConditionRating, RatingInfo> = {
     labelHi: "नया — कभी उपयोग नहीं हुआ",
     description: "Unused, no defects whatsoever. Sealed or stored properly.",
     priceMultiplier: 0.50,
-    eligibleFor: ["public_sale", "institution_allocation", "freebie"],
+    eligibleFor: ["public_sale", "inter_government", "ngo_donation", "freebie"],
     color: "#27AE60",
   },
   9: {
@@ -16,7 +16,7 @@ export const RATING_CONFIG: Record<ConditionRating, RatingInfo> = {
     labelHi: "अप्रयुक्त — मामूली दोष",
     description: "Never deployed but has a minor storage or manufacturing defect.",
     priceMultiplier: 0.42,
-    eligibleFor: ["public_sale", "institution_allocation", "freebie"],
+    eligibleFor: ["public_sale", "inter_government", "ngo_donation", "freebie"],
     color: "#2ECC71",
   },
   8: {
@@ -25,7 +25,7 @@ export const RATING_CONFIG: Record<ConditionRating, RatingInfo> = {
     labelHi: "उपयोग किया — उत्कृष्ट",
     description: "Used, looks nearly new, fully functional with no visible damage.",
     priceMultiplier: 0.35,
-    eligibleFor: ["public_sale", "institution_allocation", "freebie"],
+    eligibleFor: ["public_sale", "inter_government", "ngo_donation", "freebie"],
     color: "#F39C12",
   },
   7: {
@@ -34,7 +34,7 @@ export const RATING_CONFIG: Record<ConditionRating, RatingInfo> = {
     labelHi: "उपयोग किया — अच्छा",
     description: "Visible light wear and tear, fully functional.",
     priceMultiplier: 0.28,
-    eligibleFor: ["public_sale", "institution_allocation", "freebie"],
+    eligibleFor: ["public_sale", "inter_government", "ngo_donation", "freebie"],
     color: "#E67E22",
   },
   6: {
@@ -43,7 +43,7 @@ export const RATING_CONFIG: Record<ConditionRating, RatingInfo> = {
     labelHi: "उपयोग किया — ठीक-ठाक",
     description: "Moderate wear, functional, minor cosmetic issues.",
     priceMultiplier: 0.20,
-    eligibleFor: ["institution_allocation", "freebie"],
+    eligibleFor: ["inter_government", "ngo_donation", "freebie"],
     color: "#D35400",
   },
   5: {

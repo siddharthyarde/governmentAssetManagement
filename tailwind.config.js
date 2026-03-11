@@ -51,6 +51,24 @@ module.exports = {
           muted:   "#F2F2EE",
           dark:    "#E8E8E3",
         },
+        // ── Semantic shorthand (used as bg-primary, text-foreground, etc.) ──
+        primary: {
+          DEFAULT:    "#E07B00",   // saffron-500
+          foreground: "#FFFFFF",
+        },
+        secondary: {
+          DEFAULT:    "#138808",   // green-500
+          foreground: "#FFFFFF",
+        },
+        accent: {
+          DEFAULT:    "#C9960C",   // gold-500
+          foreground: "#FFFFFF",
+        },
+        foreground: "#1A1A1A",
+        muted: {
+          DEFAULT:    "#F2F2EE",
+          foreground: "#5A5A5A",
+        },
         // ── Semantic ────────────────────────────────────────────────
         danger:  "#C0392B",
         warning: "#E67E22",

@@ -14,7 +14,7 @@ export type UserRole =
 
 export type PortalType = "manage" | "company" | "public" | "buyer";
 
-export type GovLevel = "central" | "state" | "municipal";
+export type GovLevel = "central" | "state" | "municipal" | "panchayat";
 
 export type ProductType = "reusable" | "disposable";
 
@@ -23,62 +23,91 @@ export type ProductStatus =
   | "pending_approval"
   | "approved"
   | "rejected"
-  | "discontinued"
+  | "discontinued";
+
+export type ProductInstanceStatus =
+  | "in_stock"
+  | "deployed"
+  | "in_transit"
+  | "under_repair"
+  | "pending_rating"
+  | "redistributed"
   | "condemned"
-  | "lost";
+  | "lost"
+  | "written_off";
 
 export type EventStatus =
   | "draft"
-  | "pending_approval"
   | "approved"
+  | "assets_requested"
+  | "assets_confirmed"
   | "ongoing"
   | "ended"
   | "post_event_review"
-  | "closed"
-  | "archived";
+  | "closed";
 
 export type EventType =
-  | "national"
-  | "state"
-  | "sports"
+  | "national_celebration"
+  | "state_celebration"
   | "cultural"
-  | "disaster_relief"
-  | "institutional";
-
-export type CompanyStatus = "pending" | "approved" | "rejected" | "suspended";
-
-export type InstitutionType =
-  | "pvt_ltd"
-  | "llp"
-  | "opc"
-  | "partnership"
-  | "trust"
-  | "society"
-  | "section_8"
-  | "ngo"
-  | "govt_institution"
+  | "sports"
+  | "exhibition"
+  | "relief_distribution"
+  | "public_service"
   | "other";
 
-export type RedistributionType = "public_sale" | "institution_allocation" | "freebie";
+export type CompanyStatus =
+  | "pending_review"
+  | "documents_requested"
+  | "approved"
+  | "suspended"
+  | "blacklisted";
+
+export type InstitutionType =
+  | "central_govt"
+  | "state_govt"
+  | "municipal_body"
+  | "panchayat"
+  | "public_sector_undertaking"
+  | "autonomous_body"
+  | "ngo_registered"
+  | "educational_institution"
+  | "hospital_govt"
+  | "defence"
+  | "police"
+  | "other";
+
+export type InstitutionStatus =
+  | "pending_review"
+  | "documents_requested"
+  | "approved"
+  | "suspended"
+  | "rejected";
+
+export type RedistributionType =
+  | "public_sale"
+  | "inter_government"
+  | "ngo_donation"
+  | "freebie";
 
 export type RedistributionStatus =
-  | "available"
-  | "requested"
-  | "approved"
+  | "listed"
+  | "reserved"
   | "dispatched"
-  | "delivered"
-  | "returned";
+  | "completed"
+  | "cancelled";
 
 export type ConditionRating = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
 
 export type OrderStatus =
-  | "pending"
+  | "pending_payment"
   | "payment_received"
-  | "approved"
+  | "processing"
   | "dispatched"
-  | "in_transit"
   | "delivered"
-  | "grievance_raised";
+  | "returned"
+  | "refunded"
+  | "cancelled";
 
 // ─── Database Row Types ───────────────────────────────────────────────────────
 
@@ -120,7 +149,7 @@ export interface Product {
   delivery_photo_url: string | null;
   qr_code_url: string | null;
   is_individually_tracked: boolean; // true if price > threshold
-  status: "pending_approval" | "approved" | "rejected";
+  status: ProductStatus;
   created_at: string;
   approved_at: string | null;
 }
@@ -135,7 +164,7 @@ export interface ProductInstance {
   product_id: string;
   unique_id: string;
   serial_number: string | null;
-  status: ProductStatus;
+  status: ProductInstanceStatus;
   current_event_id: string | null;
   current_area_id: string | null;
   warehouse_zone: string | null;
@@ -278,7 +307,7 @@ export interface Institution {
   bank_account_number: string;
   bank_ifsc: string;
   bank_name: string;
-  status: "pending" | "approved" | "rejected" | "suspended";
+  status: InstitutionStatus;
   credibility_score: number;
   created_at: string;
 }

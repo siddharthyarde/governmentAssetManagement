@@ -25,7 +25,7 @@ export type InstitutionType =
   | "public_sector_undertaking" | "autonomous_body" | "ngo_registered"
   | "educational_institution" | "hospital_govt" | "defence" | "police" | "other";
 export type InstitutionStatus =
-  | "pending_review" | "documents_requested" | "approved" | "suspended";
+  | "pending_review" | "documents_requested" | "approved" | "suspended" | "rejected";
 export type ProductType = "reusable" | "disposable";
 export type ProductStatus =
   | "draft" | "pending_approval" | "approved" | "rejected" | "discontinued";

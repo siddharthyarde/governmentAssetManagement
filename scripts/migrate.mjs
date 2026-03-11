@@ -38,6 +38,7 @@ const migrations = [
   '../supabase/migrations/002_storage_setup.sql',
   '../supabase/migrations/003_functions.sql',
   '../supabase/migrations/004_security_patches.sql',
+  '../supabase/migrations/005_institution_rejected.sql',
 ];
 
 async function run() {

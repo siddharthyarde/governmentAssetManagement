@@ -20,6 +20,15 @@ export async function rejectCompany(companyCode: string, reason: string) {
   const admin = createAdminClient();
   const { error } = await admin
     .from("companies")
+    .update({ status: "suspended", review_notes: reason, reviewed_at: new Date().toISOString() })
+    .eq("company_code", companyCode);
+  if (error) throw new Error(error.message);
+}
+
+export async function blacklistCompany(companyCode: string, reason: string) {
+  const admin = createAdminClient();
+  const { error } = await admin
+    .from("companies")
     .update({ status: "blacklisted", review_notes: reason, reviewed_at: new Date().toISOString() })
     .eq("company_code", companyCode);
   if (error) throw new Error(error.message);
@@ -65,10 +74,9 @@ export async function approveInstitution(institutionCode: string) {
 
 export async function rejectInstitution(institutionCode: string, reason: string) {
   const admin = createAdminClient();
-  // 'suspended' is the closest available negative status for institutions in the DB enum
   const { error } = await admin
     .from("institutions")
-    .update({ status: "suspended", review_notes: reason, reviewed_at: new Date().toISOString() })
+    .update({ status: "rejected", review_notes: reason, reviewed_at: new Date().toISOString() })
     .eq("institution_code", institutionCode);
   if (error) throw new Error(error.message);
 }
@@ -105,11 +113,13 @@ export async function rejectProduct(productCode: string, reason: string) {
 // ─── Staff User Actions ───────────────────────────────────────────────────────
 
 const ROLE_MAP: Record<string, string> = {
-  "Super Admin": "super_admin",
-  "Admin":       "gov_admin",
-  "Inspector":   "inspector",
-  "Volunteer":   "volunteer",
-  "Viewer":      "auditor",
+  "Super Admin":       "super_admin",
+  "Admin":             "gov_admin",
+  "Event Manager":     "event_manager",
+  "Inspector":         "inspector",
+  "Volunteer":         "volunteer",
+  "Warehouse Officer": "warehouse_officer",
+  "Viewer":            "auditor",
 };
 
 export async function inviteStaffUser(email: string, fullName: string, uiRole: string) {
