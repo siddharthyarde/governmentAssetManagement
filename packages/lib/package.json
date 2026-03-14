@@ -1,0 +1,29 @@
+{
+  "name": "@gams/lib",
+  "version": "0.0.1",
+  "private": true,
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "exports": {
+    ".": "./index.ts",
+    "./supabase/client": "./supabase/client.ts",
+    "./supabase/server": "./supabase/server.ts",
+    "./supabase/middleware": "./supabase/middleware.ts",
+    "./supabase/database.types": "./supabase/database.types.ts",
+    "./supabase/admin": "./supabase/admin.ts",
+    "./utils": "./utils/index.ts",
+    "./id-generator": "./utils/id-generator.ts",
+    "./rating": "./utils/rating.ts"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.47.0",
+    "@supabase/ssr": "^0.9.0",
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^2.5.4",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3",
+    "@types/node": "^22.0.0"
+  }
+}
