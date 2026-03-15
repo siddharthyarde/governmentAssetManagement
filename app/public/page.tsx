@@ -79,7 +79,7 @@ function PublicNav() {
             >
               {lang === "en" ? "हिं" : "EN"}
             </button>
-            <Link href="/cart" className="relative p-2.5 rounded-xl border border-border hover:bg-surface transition-colors" aria-label="Cart">
+            <Link href="/public/cart" className="relative p-2.5 rounded-xl border border-border hover:bg-surface transition-colors" aria-label="Cart">
               <ShoppingCart size={18} className="text-[#5A5A5A]" />
               <span className="absolute top-1 right-1 w-4 h-4 bg-saffron-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center">2</span>
             </Link>

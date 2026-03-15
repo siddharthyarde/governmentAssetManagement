@@ -49,12 +49,12 @@ type NavItem = {
 // ─── Nav Config ───────────────────────────────────────────────────────────────
 
 const NAV_ITEMS: NavItem[] = [
-  { label: "Dashboard", href: "/dashboard", icon: <LayoutDashboard size={18} /> },
-  { label: "My Products", href: "/dashboard/products", icon: <Package size={18} />, badge: 3 },
-  { label: "Orders & POs", href: "/dashboard/orders", icon: <ShoppingCart size={18} /> },
-  { label: "QR Codes", href: "/dashboard/qr-codes", icon: <QrCode size={18} /> },
-  { label: "Documents", href: "/dashboard/documents", icon: <FileText size={18} /> },
-  { label: "Account Settings", href: "/dashboard/settings", icon: <Settings size={18} /> },
+  { label: "Dashboard", href: "/company/dashboard", icon: <LayoutDashboard size={18} /> },
+  { label: "My Products", href: "/company/dashboard/products", icon: <Package size={18} />, badge: 3 },
+  { label: "Orders & POs", href: "/company/dashboard/orders", icon: <ShoppingCart size={18} /> },
+  { label: "QR Codes", href: "/company/dashboard/qr-codes", icon: <QrCode size={18} /> },
+  { label: "Documents", href: "/company/dashboard/documents", icon: <FileText size={18} /> },
+  { label: "Account Settings", href: "/company/dashboard/settings", icon: <Settings size={18} /> },
 ];
 
 // ─── Sidebar ──────────────────────────────────────────────────────────────────
@@ -133,7 +133,7 @@ function Sidebar({
         {/* Nav */}
         <nav className="flex-1 px-2 py-3 overflow-y-auto">
           {NAV_ITEMS.map((item) => {
-            const active = item.href === "/dashboard";
+            const active = item.href === "/company/dashboard";
             return (
               <Link
                 key={item.href}
@@ -579,11 +579,11 @@ export default function CompanyDashboardPage({
               <h2 className="text-base font-bold text-gray-900 mb-4">Quick Actions</h2>
               <div className="flex flex-col gap-2">
                 {[
-                  { label: "Add New Product",          icon: <Plus size={15} />,       href: "/dashboard/products/new",   color: "#E07B00" },
-                  { label: "Upload Bulk CSV",           icon: <Upload size={15} />,     href: "/dashboard/products/bulk",  color: "#138808" },
-                  { label: "Download QR Label Sheet",   icon: <Download size={15} />,   href: "/dashboard/qr-codes",       color: "#C9960C" },
-                  { label: "View Order History",        icon: <BarChart3 size={15} />,  href: "/dashboard/orders",         color: "#1A3A6B" },
-                  { label: "Update Company Documents",  icon: <FileText size={15} />,   href: "/dashboard/documents",      color: "#6D28D9" },
+                  { label: "Add New Product",          icon: <Plus size={15} />,       href: "/company/dashboard/products/new",   color: "#E07B00" },
+                  { label: "Upload Bulk CSV",           icon: <Upload size={15} />,     href: "/company/dashboard/products/bulk",  color: "#138808" },
+                  { label: "Download QR Label Sheet",   icon: <Download size={15} />,   href: "/company/dashboard/qr-codes",       color: "#C9960C" },
+                  { label: "View Order History",        icon: <BarChart3 size={15} />,  href: "/company/dashboard/orders",         color: "#1A3A6B" },
+                  { label: "Update Company Documents",  icon: <FileText size={15} />,   href: "/company/dashboard/documents",      color: "#6D28D9" },
                 ].map((a) => (
                   <Link
                     key={a.label}

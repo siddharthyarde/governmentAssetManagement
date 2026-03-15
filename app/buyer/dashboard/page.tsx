@@ -51,11 +51,11 @@ type NavItem = {
 // ─── Nav Config ───────────────────────────────────────────────────────────────
 
 const NAV_ITEMS: NavItem[] = [
-  { label: "Dashboard",          href: "/dashboard",            icon: <LayoutDashboard size={18} /> },
-  { label: "Browse Marketplace", href: "/dashboard/marketplace",icon: <ShoppingBag size={18} />, badge: 24 },
-  { label: "My Orders",          href: "/dashboard/orders",     icon: <ClipboardList size={18} />, badge: 2 },
-  { label: "Documents",          href: "/dashboard/documents",  icon: <FileText size={18} /> },
-  { label: "Account Settings",   href: "/dashboard/settings",   icon: <Settings size={18} /> },
+  { label: "Dashboard",          href: "/buyer/dashboard",            icon: <LayoutDashboard size={18} /> },
+  { label: "Browse Marketplace", href: "/buyer/dashboard/marketplace",icon: <ShoppingBag size={18} />, badge: 24 },
+  { label: "My Orders",          href: "/buyer/dashboard/orders",     icon: <ClipboardList size={18} />, badge: 2 },
+  { label: "Documents",          href: "/buyer/dashboard/documents",  icon: <FileText size={18} /> },
+  { label: "Account Settings",   href: "/buyer/dashboard/settings",   icon: <Settings size={18} /> },
 ];
 
 // ─── Sidebar ──────────────────────────────────────────────────────────────────
@@ -132,7 +132,7 @@ function Sidebar({
         {/* Nav */}
         <nav className="flex-1 px-2 py-3 overflow-y-auto">
           {NAV_ITEMS.map((item) => {
-            const active = item.href === "/dashboard";
+            const active = item.href === "/buyer/dashboard";
             return (
               <Link
                 key={item.href}
@@ -606,7 +606,7 @@ export default function BuyerDashboardPage({
                           </p>
                         </div>
                         <Link
-                          href={`/dashboard/marketplace/${listing.id}`}
+                          href={`/buyer/dashboard/marketplace/${listing.id}`}
                           className="shrink-0 inline-flex items-center gap-1 text-xs font-bold text-white px-2.5 py-1.5 rounded-lg mt-0.5"
                           style={{ background: "#138808" }}
                         >
@@ -674,11 +674,11 @@ export default function BuyerDashboardPage({
               <h2 className="text-base font-bold text-gray-900 mb-4">Quick Actions</h2>
               <div className="flex flex-col gap-2">
                 {[
-                  { label: "Browse All Listings",        icon: <ShoppingBag size={15} />, href: "/dashboard/marketplace",           color: "#138808" },
-                  { label: "Apply Category Filter",      icon: <Filter size={15} />,      href: "/dashboard/marketplace?filter=1",  color: "#E07B00" },
-                  { label: "Track Order Delivery",       icon: <Truck size={15} />,       href: "/dashboard/orders",                color: "#C9960C" },
-                  { label: "Download Order Receipts",    icon: <FileText size={15} />,    href: "/dashboard/orders?receipts=1",     color: "#1A3A6B" },
-                  { label: "Update Institution Profile", icon: <Settings size={15} />,    href: "/dashboard/settings",              color: "#6D28D9" },
+                  { label: "Browse All Listings",        icon: <ShoppingBag size={15} />, href: "/buyer/dashboard/marketplace",           color: "#138808" },
+                  { label: "Apply Category Filter",      icon: <Filter size={15} />,      href: "/buyer/dashboard/marketplace?filter=1",  color: "#E07B00" },
+                  { label: "Track Order Delivery",       icon: <Truck size={15} />,       href: "/buyer/dashboard/orders",                color: "#C9960C" },
+                  { label: "Download Order Receipts",    icon: <FileText size={15} />,    href: "/buyer/dashboard/orders?receipts=1",     color: "#1A3A6B" },
+                  { label: "Update Institution Profile", icon: <Settings size={15} />,    href: "/buyer/dashboard/settings",              color: "#6D28D9" },
                 ].map((a) => (
                   <Link
                     key={a.label}

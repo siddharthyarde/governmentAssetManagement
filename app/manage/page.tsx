@@ -43,52 +43,52 @@ const NAV: NavSection[] = [
   {
     label: "Overview",
     items: [
-      { icon: <LayoutDashboard size={18} />, label: "Dashboard", href: "/" },
-      { icon: <Bell size={18} />, label: "Notifications", href: "/notifications", badge: 4 },
+      { icon: <LayoutDashboard size={18} />, label: "Dashboard", href: "/manage" },
+      { icon: <Bell size={18} />, label: "Notifications", href: "/manage/notifications", badge: 4 },
     ],
   },
   {
     label: "Asset Management",
     items: [
-      { icon: <Package size={18} />, label: "Asset Registry", href: "/assets" },
-      { icon: <Warehouse size={18} />, label: "Warehouse", href: "/warehouse" },
-      { icon: <QrCode size={18} />, label: "Scan QR", href: "/scan" },
+      { icon: <Package size={18} />, label: "Asset Registry", href: "/manage/assets" },
+      { icon: <Warehouse size={18} />, label: "Warehouse", href: "/manage/warehouse" },
+      { icon: <QrCode size={18} />, label: "Scan QR", href: "/manage/scan" },
     ],
   },
   {
     label: "Events",
     items: [
-      { icon: <Calendar size={18} />, label: "Events", href: "/events" },
-      { icon: <ClipboardList size={18} />, label: "Event Assets", href: "/event-assets" },
+      { icon: <Calendar size={18} />, label: "Events", href: "/manage/events" },
+      { icon: <ClipboardList size={18} />, label: "Event Assets", href: "/manage/event-assets" },
     ],
   },
   {
     label: "People",
     items: [
-      { icon: <Building2 size={18} />, label: "Companies", href: "/companies", badge: 3 },
-      { icon: <Users size={18} />, label: "Users & Roles", href: "/users" },
-      { icon: <CheckCircle2 size={18} />, label: "Institutions", href: "/institutions", badge: 7 },
+      { icon: <Building2 size={18} />, label: "Companies", href: "/manage/companies", badge: 3 },
+      { icon: <Users size={18} />, label: "Users & Roles", href: "/manage/users" },
+      { icon: <CheckCircle2 size={18} />, label: "Institutions", href: "/manage/institutions", badge: 7 },
     ],
   },
   {
     label: "Post-Event",
     items: [
-      { icon: <Star size={18} />, label: "Rate Assets", href: "/rating" },
-      { icon: <AlertTriangle size={18} />, label: "Defects", href: "/defects" },
-      { icon: <Package size={18} />, label: "Redistribution", href: "/redistribution" },
+      { icon: <Star size={18} />, label: "Rate Assets", href: "/manage/rating" },
+      { icon: <AlertTriangle size={18} />, label: "Defects", href: "/manage/defects" },
+      { icon: <Package size={18} />, label: "Redistribution", href: "/manage/redistribution" },
     ],
   },
   {
     label: "Reports",
     items: [
-      { icon: <FileText size={18} />, label: "Reports", href: "/reports" },
-      { icon: <Clock size={18} />, label: "Audit Log", href: "/audit" },
+      { icon: <FileText size={18} />, label: "Reports", href: "/manage/reports" },
+      { icon: <Clock size={18} />, label: "Audit Log", href: "/manage/audit" },
     ],
   },
   {
     label: "System",
     items: [
-      { icon: <Settings size={18} />, label: "Settings", href: "/settings" },
+      { icon: <Settings size={18} />, label: "Settings", href: "/manage/settings" },
     ],
   },
 ];
@@ -612,12 +612,12 @@ export default function ManageDashboard() {
               <h3 className="font-semibold text-[#1A1A1A] mb-4">Quick Actions</h3>
               <div className="grid grid-cols-2 gap-3">
                 {[
-                  { icon: <Scan size={20} />, label: "Scan QR", href: "/scan", color: "saffron" },
-                  { icon: <Calendar size={20} />, label: "New Event", href: "/events/new", color: "green" },
-                  { icon: <Users size={20} />, label: "Add User", href: "/users/new", color: "gold" },
-                  { icon: <Star size={20} />, label: "Rate Assets", href: "/rating", color: "default" },
-                  { icon: <FileText size={20} />, label: "Reports", href: "/reports", color: "default" },
-                  { icon: <Package size={20} />, label: "List Asset", href: "/assets/new", color: "default" },
+                  { icon: <Scan size={20} />, label: "Scan QR", href: "/manage/scan", color: "saffron" },
+                  { icon: <Calendar size={20} />, label: "New Event", href: "/manage/events/create", color: "green" },
+                  { icon: <Users size={20} />, label: "Add User", href: "/manage/users/new", color: "gold" },
+                  { icon: <Star size={20} />, label: "Rate Assets", href: "/manage/rating", color: "default" },
+                  { icon: <FileText size={20} />, label: "Reports", href: "/manage/reports", color: "default" },
+                  { icon: <Package size={20} />, label: "List Asset", href: "/manage/assets/new", color: "default" },
                 ].map((action) => (
                   <Link key={action.href} href={action.href}>
                     <div className={`flex flex-col items-center gap-2 p-3 rounded-xl border border-border hover:border-saffron-300 hover:bg-saffron-50 transition-colors text-center`}>

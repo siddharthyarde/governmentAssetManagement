@@ -8,7 +8,7 @@ import type { Database } from "./database.types";
  * Returns both the client and the response to forward.
  */
 export function createMiddlewareClient(request: NextRequest) {
-  let response = NextResponse.next({ request });
+  let response = NextResponse.next();
 
   const supabase = createServerClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -24,7 +24,7 @@ export function createMiddlewareClient(request: NextRequest) {
             request.cookies.set(name, value)
           );
           // Then rebuild the response so new cookies are forwarded
-          response = NextResponse.next({ request });
+          response = NextResponse.next();
           cookiesToSet.forEach(({ name, value, options }) =>
             response.cookies.set(name, value, options)
           );
@@ -47,7 +47,7 @@ export function createMiddlewareClient(request: NextRequest) {
 export async function getSessionUser(request: NextRequest) {
   // ── Development bypass ──────────────────────────────────────────────────
   if (process.env.DEV_BYPASS_AUTH === "true") {
-    const response = NextResponse.next({ request });
+    const response = NextResponse.next();
     const devUser = {
       id: "dev-bypass-user",
       email: "dev@gams.gov.in",

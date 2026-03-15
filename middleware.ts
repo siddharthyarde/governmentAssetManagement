@@ -14,7 +14,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { getSessionUser, isAlwaysPublic } from "@gams/lib/supabase/middleware";
 
 function passThrough(request: NextRequest) {
-  return NextResponse.next({ request });
+  return NextResponse.next();
 }
 
 // ─── Manage: everything protected except /manage/login ────────────────────────

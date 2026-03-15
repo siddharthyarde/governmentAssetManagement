@@ -25,8 +25,8 @@ function Nav() {
             </div>
           </Link>
           <div className="hidden md:flex items-center gap-6">
-            {[["Marketplace", "/marketplace"], ["Scanner", "/scan"], ["About", "/about"]].map(([label, href]) => (
-              <Link key={href} href={href} className={`text-sm font-semibold ${href === "/about" ? "text-saffron-600" : "text-gray-600 hover:text-gray-900"}`}>{label}</Link>
+            {[["Marketplace", "/public/marketplace"], ["Scanner", "/public/scan"], ["About", "/public/about"]].map(([label, href]) => (
+              <Link key={href} href={href} className={`text-sm font-semibold ${href === "/public/about" ? "text-saffron-600" : "text-gray-600 hover:text-gray-900"}`}>{label}</Link>
             ))}
             <Link href="/public/login" className="text-sm font-bold px-4 py-2 rounded-lg border border-gray-200 hover:bg-gray-50">Sign In</Link>
             <Link href="/public/register" className="text-sm font-bold text-white px-4 py-2 rounded-lg bg-saffron-500 hover:bg-saffron-600">Register</Link>
@@ -35,7 +35,7 @@ function Nav() {
         </div>
         {menuOpen && (
           <div className="md:hidden border-t border-gray-100 py-3 flex flex-col gap-2">
-            {[["Marketplace", "/marketplace"], ["Scanner", "/scan"], ["About", "/about"]].map(([label, href]) => (
+            {[["Marketplace", "/public/marketplace"], ["Scanner", "/public/scan"], ["About", "/public/about"]].map(([label, href]) => (
               <Link key={href} href={href} className="text-sm font-semibold text-gray-700 py-1.5 px-1" onClick={() => setMenuOpen(false)}>{label}</Link>
             ))}
             <Link href="/public/register" className="text-sm font-bold text-white px-4 py-2 rounded-lg bg-saffron-500 text-center mt-1" onClick={() => setMenuOpen(false)}>Register</Link>
