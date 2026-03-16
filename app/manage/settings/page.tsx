@@ -10,14 +10,14 @@ import {
 } from "lucide-react";
 
 const NAV_ITEMS = [
-  { href: "/", icon: LayoutDashboard, label: "Dashboard" },
-  { href: "/notifications", icon: Bell, label: "Notifications" },
-  { href: "/assets", icon: Package, label: "Asset Registry" },
-  { href: "/analytics", icon: BarChart3, label: "Analytics" },
-  { href: "/reports", icon: FileText, label: "Reports" },
-  { href: "/audit", icon: Clock, label: "Audit Log" },
-  { href: "/approvals", icon: CheckCircle2, label: "Approvals" },
-  { href: "/settings", icon: Settings, label: "Settings" },
+  { href: "/manage",              icon: LayoutDashboard, label: "Dashboard" },
+  { href: "/manage/notifications",icon: Bell,            label: "Notifications" },
+  { href: "/manage/assets",       icon: Package,         label: "Asset Registry" },
+  { href: "/manage/analytics",    icon: BarChart3,       label: "Analytics" },
+  { href: "/manage/reports",      icon: FileText,        label: "Reports" },
+  { href: "/manage/audit",        icon: Clock,           label: "Audit Log" },
+  { href: "/manage/approvals",    icon: CheckCircle2,    label: "Approvals" },
+  { href: "/manage/settings",     icon: Settings,        label: "Settings" },
 ];
 
 const TABS = ["General", "Notifications", "Roles", "Security", "API"] as const;
@@ -70,7 +70,7 @@ export default function SettingsPage() {
         </div>
         <nav className="flex-1 py-3 px-3 flex flex-col gap-0.5">
           {NAV_ITEMS.map(({ href, icon: Icon, label }) => (
-            <Link key={href} href={href} className={`flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition-colors ${href === "/settings" ? "bg-saffron-50 text-saffron-700 font-bold" : "text-gray-500 hover:bg-surface"}`}>
+            <Link key={href} href={href} className={`flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition-colors ${href === "/manage/settings" ? "bg-saffron-50 text-saffron-700 font-bold" : "text-gray-500 hover:bg-surface"}`}>
               <Icon size={15} /> {label}
             </Link>
           ))}

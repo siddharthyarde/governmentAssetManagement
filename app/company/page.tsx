@@ -56,13 +56,13 @@ function CompanyNav() {
 
           {/* Desktop links */}
           <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-gray-700">
-            <Link href="/how-it-works" className="hover:text-saffron-600 transition-colors">
+            <Link href="/company/how-it-works" className="hover:text-saffron-600 transition-colors">
               {lang === "en" ? "How It Works" : "यह कैसे काम करता है"}
             </Link>
-            <Link href="/guidelines" className="hover:text-saffron-600 transition-colors">
+            <Link href="/company/guidelines" className="hover:text-saffron-600 transition-colors">
               {lang === "en" ? "Guidelines" : "दिशा-निर्देश"}
             </Link>
-            <Link href="/support" className="hover:text-saffron-600 transition-colors">
+            <Link href="/company/support" className="hover:text-saffron-600 transition-colors">
               {lang === "en" ? "Support" : "सहायता"}
             </Link>
           </nav>
@@ -103,9 +103,9 @@ function CompanyNav() {
         {/* Mobile menu */}
         {mobileOpen && (
           <nav className="md:hidden border-t border-border py-3 flex flex-col gap-3 text-sm font-medium text-gray-700">
-            <Link href="/how-it-works" className="hover:text-saffron-600">How It Works</Link>
-            <Link href="/guidelines" className="hover:text-saffron-600">Guidelines</Link>
-            <Link href="/support" className="hover:text-saffron-600">Support</Link>
+            <Link href="/company/how-it-works" className="hover:text-saffron-600">How It Works</Link>
+            <Link href="/company/guidelines" className="hover:text-saffron-600">Guidelines</Link>
+            <Link href="/company/support" className="hover:text-saffron-600">Support</Link>
             <Link href="/company/login" className="hover:text-saffron-600">Login</Link>
           </nav>
         )}
@@ -453,10 +453,10 @@ export default function CompanyHomePage() {
             </div>
           </div>
           <div className="flex flex-wrap gap-4">
-            <Link href="/privacy" className="hover:text-gray-600 transition-colors">Privacy Policy</Link>
-            <Link href="/terms" className="hover:text-gray-600 transition-colors">Terms of Use</Link>
-            <Link href="/guidelines" className="hover:text-gray-600 transition-colors">Supplier Guidelines</Link>
-            <Link href="/support" className="hover:text-gray-600 transition-colors">Support</Link>
+            <Link href="/public/privacy" className="hover:text-gray-600 transition-colors">Privacy Policy</Link>
+            <Link href="/public/terms" className="hover:text-gray-600 transition-colors">Terms of Use</Link>
+            <Link href="/company/guidelines" className="hover:text-gray-600 transition-colors">Supplier Guidelines</Link>
+            <Link href="/company/support" className="hover:text-gray-600 transition-colors">Support</Link>
           </div>
         </div>
         <div className="border-t border-border bg-surface py-3">

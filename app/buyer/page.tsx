@@ -57,10 +57,10 @@ function BuyerNav() {
 
           {/* Desktop links */}
           <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-gray-700">
-            <Link href="/available-stock" className="hover:text-amber-700 transition-colors">Available Stock</Link>
-            <Link href="/how-it-works" className="hover:text-amber-700 transition-colors">How It Works</Link>
-            <Link href="/eligibility" className="hover:text-amber-700 transition-colors">Eligibility</Link>
-            <Link href="/support" className="hover:text-amber-700 transition-colors">Support</Link>
+            <Link href="/buyer/available-stock" className="hover:text-amber-700 transition-colors">Available Stock</Link>
+            <Link href="/buyer/how-it-works" className="hover:text-amber-700 transition-colors">How It Works</Link>
+            <Link href="/buyer/eligibility" className="hover:text-amber-700 transition-colors">Eligibility</Link>
+            <Link href="/buyer/support" className="hover:text-amber-700 transition-colors">Support</Link>
           </nav>
 
           {/* Right */}
@@ -95,10 +95,10 @@ function BuyerNav() {
         </div>
         {mobileOpen && (
           <nav className="md:hidden border-t border-border py-3 flex flex-col gap-3 text-sm font-medium text-gray-700">
-            <Link href="/available-stock" className="hover:text-amber-700">Available Stock</Link>
-            <Link href="/how-it-works" className="hover:text-amber-700">How It Works</Link>
-            <Link href="/eligibility" className="hover:text-amber-700">Eligibility</Link>
-            <Link href="/support" className="hover:text-amber-700">Support</Link>
+            <Link href="/buyer/available-stock" className="hover:text-amber-700">Available Stock</Link>
+            <Link href="/buyer/how-it-works" className="hover:text-amber-700">How It Works</Link>
+            <Link href="/buyer/eligibility" className="hover:text-amber-700">Eligibility</Link>
+            <Link href="/buyer/support" className="hover:text-amber-700">Support</Link>
             <Link href="/buyer/login" className="hover:text-amber-700">Login</Link>
           </nav>
         )}
@@ -222,7 +222,7 @@ export default function BuyerHomePage() {
       <div className="bg-amber-50 border-b border-amber-200 py-2 px-4">
         <p className="text-center text-xs font-semibold text-amber-800 max-w-screen-xl mx-auto">
           📢 New Stock Available: Post-G20 Summit assets (Electronics, Furniture, AV Equipment) now open for institutional requests.{" "}
-          <Link href="/available-stock" className="underline font-bold">View Stock →</Link>
+          <Link href="/buyer/available-stock" className="underline font-bold">View Stock →</Link>
         </p>
       </div>
 
@@ -258,7 +258,7 @@ export default function BuyerHomePage() {
                 Register Organisation <ArrowRight size={16} />
               </Link>
               <Link
-                href="/available-stock"
+                href="/buyer/available-stock"
                 className="inline-flex items-center gap-2 text-amber-800 text-sm font-semibold border border-amber-300 bg-amber-50 px-6 py-3 rounded hover:bg-amber-100 transition-colors"
               >
                 <Package size={16} /> Browse Available Stock
@@ -371,7 +371,7 @@ export default function BuyerHomePage() {
               <h2 className="text-2xl md:text-3xl font-extrabold text-gray-900">Currently available for institutional request</h2>
             </div>
             <Link
-              href="/available-stock"
+              href="/buyer/available-stock"
               className="inline-flex items-center gap-2 text-sm font-bold text-white px-5 py-2.5 rounded hover:opacity-90 transition-opacity"
               style={{ background: "#C9960C" }}
             >
@@ -382,7 +382,7 @@ export default function BuyerHomePage() {
             {ACTIVE_CATEGORIES.map((cat) => (
               <Link
                 key={cat.label}
-                href={`/available-stock?category=${encodeURIComponent(cat.label)}`}
+                href={`/buyer/available-stock?category=${encodeURIComponent(cat.label)}`}
                 className="bg-white border border-border rounded-xl p-5 flex flex-col gap-2 hover:border-amber-300 hover:shadow-sm transition-all group"
               >
                 <Package size={20} className="text-amber-600 group-hover:text-amber-700" />
@@ -469,11 +469,11 @@ export default function BuyerHomePage() {
             </div>
           </div>
           <div className="flex flex-wrap gap-4">
-            <Link href="/privacy" className="hover:text-gray-600 transition-colors">Privacy Policy</Link>
-            <Link href="/terms" className="hover:text-gray-600 transition-colors">Terms of Use</Link>
-            <Link href="/eligibility" className="hover:text-gray-600 transition-colors">Eligibility Criteria</Link>
+            <Link href="/public/privacy" className="hover:text-gray-600 transition-colors">Privacy Policy</Link>
+            <Link href="/public/terms" className="hover:text-gray-600 transition-colors">Terms of Use</Link>
+            <Link href="/buyer/eligibility" className="hover:text-gray-600 transition-colors">Eligibility Criteria</Link>
             <Link href="https://public.gams.gov.in" className="hover:text-gray-600 transition-colors">Citizens Marketplace ↗</Link>
-            <Link href="/support" className="hover:text-gray-600 transition-colors">Support</Link>
+            <Link href="/buyer/support" className="hover:text-gray-600 transition-colors">Support</Link>
           </div>
         </div>
         <div className="border-t border-border bg-surface py-3">

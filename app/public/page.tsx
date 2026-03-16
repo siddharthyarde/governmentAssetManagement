@@ -38,6 +38,26 @@ import {
 function PublicNav() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [lang, setLang] = useState<"en" | "hi">("en");
+  const [authUser, setAuthUser] = useState<{ name: string; initials: string } | null>(null);
+  const [authLoading, setAuthLoading] = useState(true);
+
+  useEffect(() => {
+    const db = createClient();
+    db.auth.getUser().then(({ data: { user } }) => {
+      if (user) {
+        const name = user.user_metadata?.full_name || user.email?.split("@")[0] || "Citizen";
+        const initials = name.split(" ").slice(0, 2).map((w: string) => w[0]?.toUpperCase() || "").join("") || "C";
+        setAuthUser({ name, initials });
+      }
+      setAuthLoading(false);
+    });
+  }, []);
+
+  async function handleSignOut() {
+    const db = createClient();
+    await db.auth.signOut();
+    window.location.href = "/public";
+  }
 
   return (
     <header className="w-full bg-white sticky top-0 z-50 border-b border-border">
@@ -83,12 +103,39 @@ function PublicNav() {
               <ShoppingCart size={18} className="text-[#5A5A5A]" />
               <span className="absolute top-1 right-1 w-4 h-4 bg-saffron-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center">2</span>
             </Link>
-            <Link href="/public/login" className="hidden sm:flex btn-outline text-sm">
-              {lang === "hi" ? "लॉग इन" : "Login"}
-            </Link>
-            <Link href="/public/register" className="btn-primary text-sm">
-              {lang === "hi" ? "पंजीकरण" : "Register"}
-            </Link>
+
+            {/* Auth-aware buttons */}
+            {!authLoading && (
+              authUser ? (
+                <div className="hidden sm:flex items-center gap-2">
+                  <Link
+                    href="/public/account"
+                    className="flex items-center gap-2 text-sm font-semibold text-[#3D3D3D] px-3 py-1.5 rounded-xl border border-border hover:bg-surface transition-colors"
+                  >
+                    <div className="w-5 h-5 rounded-full bg-saffron-100 text-saffron-700 font-bold text-[10px] flex items-center justify-center">
+                      {authUser.initials}
+                    </div>
+                    {authUser.name.split(" ")[0]}
+                  </Link>
+                  <button
+                    onClick={handleSignOut}
+                    className="text-xs font-semibold text-[#7A7A7A] hover:text-danger px-2 py-1.5 rounded-lg hover:bg-red-50 transition-colors border border-transparent hover:border-red-200"
+                  >
+                    {lang === "hi" ? "लॉग आउट" : "Sign Out"}
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <Link href="/public/login" className="hidden sm:flex btn-outline text-sm">
+                    {lang === "hi" ? "लॉग इन" : "Login"}
+                  </Link>
+                  <Link href="/public/register" className="btn-primary text-sm">
+                    {lang === "hi" ? "पंजीकरण" : "Register"}
+                  </Link>
+                </>
+              )
+            )}
+
             <button
               className="md:hidden p-2 rounded-xl border border-border"
               onClick={() => setMobileOpen(!mobileOpen)}
@@ -107,7 +154,7 @@ function PublicNav() {
           ].map((cat, i) => (
             <Link
               key={cat}
-              href={`/marketplace?cat=${cat.toLowerCase()}`}
+              href={`/public/marketplace?cat=${cat.toLowerCase()}`}
               className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors ${
                 i === 0
                   ? "bg-saffron-500 text-white"
@@ -126,11 +173,34 @@ function PublicNav() {
               <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#9A9A9A]" />
               <input type="search" placeholder="Search products..." className="input-field pl-10 text-sm" />
             </div>
-            {["Marketplace", "My Orders", "Track Order", "About GAMS", "Grievance"].map((item) => (
-              <Link key={item} href={`/${item.toLowerCase().replace(" ", "-")}`} className="block px-3 py-2 rounded-xl text-sm font-medium text-[#3D3D3D] hover:bg-surface">
-                {item}
+            {[
+              { label: "Marketplace",  href: "/public/marketplace" },
+              { label: "My Orders",    href: "/public/orders" },
+              { label: "About GAMS",   href: "/public/about" },
+              { label: "Grievance",    href: "/public/grievance" },
+            ].map(({ label, href }) => (
+              <Link key={label} href={href} className="block px-3 py-2 rounded-xl text-sm font-medium text-[#3D3D3D] hover:bg-surface" onClick={() => setMobileOpen(false)}>
+                {label}
               </Link>
             ))}
+            <div className="pt-2 border-t border-border mt-1">
+              {authUser ? (
+                <>
+                  <Link href="/public/account" className="flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-semibold text-saffron-700 hover:bg-saffron-50" onClick={() => setMobileOpen(false)}>
+                    <div className="w-6 h-6 rounded-full bg-saffron-100 text-saffron-700 font-bold text-xs flex items-center justify-center">{authUser.initials}</div>
+                    My Account
+                  </Link>
+                  <button onClick={() => { setMobileOpen(false); handleSignOut(); }} className="w-full text-left px-3 py-2 rounded-xl text-sm font-medium text-danger hover:bg-red-50">
+                    Sign Out
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link href="/public/login" className="block px-3 py-2 rounded-xl text-sm font-semibold text-saffron-700 hover:bg-saffron-50" onClick={() => setMobileOpen(false)}>Login</Link>
+                  <Link href="/public/register" className="block px-3 py-2 rounded-xl text-sm font-semibold text-white bg-saffron-500 text-center mt-1 hover:bg-saffron-600" onClick={() => setMobileOpen(false)}>Register</Link>
+                </>
+              )}
+            </div>
           </div>
         )}
       </div>
@@ -369,7 +439,7 @@ function ProductCard({
         <p className="text-[10px] font-mono text-[#B0B0A8] truncate">{id}</p>
 
         {/* CTA */}
-        <Link href={`/marketplace/${id}`} className="btn-primary w-full justify-center text-sm mt-auto">
+        <Link href={`/public/marketplace/${id}`} className="btn-primary w-full justify-center text-sm mt-auto">
           View Details
         </Link>
       </div>
@@ -477,7 +547,7 @@ function CategoryBrowser() {
           {categories.map((cat) => (
             <Link
               key={cat.label}
-              href={`/marketplace?cat=${cat.href}`}
+              href={`/public/marketplace?cat=${cat.href}`}
               className="flex flex-col items-center gap-3 p-4 rounded-2xl border border-border hover:border-saffron-300 hover:bg-saffron-50 transition-all group text-center"
             >
               <span className="text-[#7A7A7A] group-hover:text-saffron-600 transition-colors">
@@ -709,22 +779,41 @@ function PublicFooter() {
 
           <div>
             <p className="text-xs font-bold text-[#9A9A9A] uppercase tracking-wider mb-3">Marketplace</p>
-            {["Browse All Products", "Electronics", "Furniture", "Vehicles", "Medical Equipment"].map((l) => (
-              <Link key={l} href="/public/marketplace" className="block text-xs text-[#C0C0B8] hover:text-white py-1 transition-colors">{l}</Link>
+            {[
+              { label: "Browse All Products",  href: "/public/marketplace" },
+              { label: "Electronics",          href: "/public/marketplace?cat=electronics" },
+              { label: "Furniture",            href: "/public/marketplace?cat=furniture" },
+              { label: "Vehicles",             href: "/public/marketplace?cat=vehicles" },
+              { label: "Medical Equipment",    href: "/public/marketplace?cat=medical" },
+            ].map(({ label, href }) => (
+              <Link key={label} href={href} className="block text-xs text-[#C0C0B8] hover:text-white py-1 transition-colors">{label}</Link>
             ))}
           </div>
 
           <div>
             <p className="text-xs font-bold text-[#9A9A9A] uppercase tracking-wider mb-3">My Account</p>
-            {["Register / Login", "My Orders", "Track Order", "Grievance", "Profile"].map((l) => (
-              <Link key={l} href="#" className="block text-xs text-[#C0C0B8] hover:text-white py-1 transition-colors">{l}</Link>
+            {[
+              { label: "Register / Login",  href: "/public/login" },
+              { label: "My Orders",         href: "/public/orders" },
+              { label: "Track Order",       href: "/public/orders" },
+              { label: "Grievance",         href: "/public/grievance" },
+              { label: "Profile",           href: "/public/account" },
+            ].map(({ label, href }) => (
+              <Link key={label} href={href} className="block text-xs text-[#C0C0B8] hover:text-white py-1 transition-colors">{label}</Link>
             ))}
           </div>
 
           <div>
             <p className="text-xs font-bold text-[#9A9A9A] uppercase tracking-wider mb-3">Information</p>
-            {["About GAMS", "How It Works", "Rating System", "GFR Compliance", "Open Data Download", "Contact"].map((l) => (
-              <Link key={l} href="#" className="block text-xs text-[#C0C0B8] hover:text-white py-1 transition-colors">{l}</Link>
+            {[
+              { label: "About GAMS",          href: "/public/about" },
+              { label: "How It Works",        href: "/public/how-it-works" },
+              { label: "Rating System",       href: "/public/how-it-works#rating" },
+              { label: "GFR Compliance",      href: "/public/terms" },
+              { label: "Open Data Download",  href: "/public/about" },
+              { label: "Contact",             href: "/public/grievance" },
+            ].map(({ label, href }) => (
+              <Link key={label} href={href} className="block text-xs text-[#C0C0B8] hover:text-white py-1 transition-colors">{label}</Link>
             ))}
           </div>
         </div>
@@ -735,9 +824,9 @@ function PublicFooter() {
             <span>Hosted by NIC</span>
             <span>GIGW Compliant</span>
             <span>WCAG 2.1 AA</span>
-            <Link href="/accessibility" className="hover:text-white transition-colors">Accessibility</Link>
-            <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
-            <Link href="/terms" className="hover:text-white transition-colors">Terms of Use</Link>
+            <Link href="/public/accessibility" className="hover:text-white transition-colors">Accessibility</Link>
+            <Link href="/public/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
+            <Link href="/public/terms" className="hover:text-white transition-colors">Terms of Use</Link>
           </div>
         </div>
       </div>

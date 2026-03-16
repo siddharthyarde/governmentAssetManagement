@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { createClient } from "@gams/lib/supabase/client";
+import { logoutAction } from "./(auth)/actions";
 import {
   LayoutDashboard,
   Package,
@@ -23,6 +24,8 @@ import {
   Settings,
   ClipboardList,
   Warehouse,
+  BarChart3,
+  LogOut,
 } from "lucide-react";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -199,14 +202,14 @@ function QuickStat({
   }[variant];
 
   return (
-    <div className={`bento-card ${border} flex items-center gap-4`}>
+    <div className={`bento-card ${border} flex items-center gap-4 p-5`}>
       <div className={`p-3 rounded-xl ${iconBg} shrink-0`}>{icon}</div>
-      <div className="min-w-0">
-        <p className="text-xs font-semibold text-[#5A5A5A] uppercase tracking-wider truncate">
+      <div className="flex-1">
+        <p className="text-xs font-semibold text-[#5A5A5A] uppercase tracking-wider">
           {label}
         </p>
-        <p className="text-2xl font-bold text-[#1A1A1A] leading-tight">{value}</p>
-        {sub && <p className="text-xs text-[#7A7A7A] mt-0.5 truncate">{sub}</p>}
+        <p className="text-2xl font-bold text-[#1A1A1A] leading-tight mt-0.5">{value}</p>
+        {sub && <p className="text-xs text-[#7A7A7A] mt-1 leading-normal">{sub}</p>}
       </div>
     </div>
   );
@@ -244,15 +247,14 @@ function ActivityRow({
   }[type];
 
   return (
-    <div className="flex items-center gap-3 py-2.5 border-b border-border last:border-0">
-      <span className={`badge ${typeColor} shrink-0`}>{typeLabel}</span>
-      <div className="flex-1 min-w-0">
-        <p className="text-sm text-[#1A1A1A] font-medium truncate">
+    <div className="flex items-start gap-3 py-3 border-b border-border last:border-0">
+      <span className={`badge ${typeColor} shrink-0 mt-0.5`}>{typeLabel}</span>
+      <div className="flex-1">
+        <p className="text-sm text-[#1A1A1A] font-medium">
           {action} — <span className="text-[#5A5A5A] font-normal">{entity}</span>
         </p>
-        <p className="text-xs text-[#7A7A7A]">by {user}</p>
+        <p className="text-xs text-[#7A7A7A] mt-0.5">by {user} · {time}</p>
       </div>
-      <p className="text-xs text-[#9A9A9A] shrink-0">{time}</p>
     </div>
   );
 }
@@ -262,6 +264,7 @@ function ActivityRow({
 export default function ManageDashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [stats, setStats] = useState({
     pendingApprovals: 0,
     activeEvents: 0,
@@ -380,8 +383,39 @@ export default function ManageDashboard() {
                   </div>
                 )}
               </div>
-              <div className="w-8 h-8 rounded-full bg-saffron-100 text-saffron-700 font-bold text-sm flex items-center justify-center border border-saffron-200">
-                SA
+              <div className="relative">
+                {userMenuOpen && <div className="fixed inset-0 z-40" onClick={() => setUserMenuOpen(false)} />}
+                <button
+                  onClick={() => setUserMenuOpen(!userMenuOpen)}
+                  className="w-8 h-8 rounded-full bg-saffron-100 text-saffron-700 font-bold text-sm flex items-center justify-center border border-saffron-200 hover:bg-saffron-200 transition-colors"
+                  aria-label="User menu"
+                >
+                  SA
+                </button>
+                {userMenuOpen && (
+                  <div className="absolute right-0 top-full mt-2 w-56 bg-white border border-border rounded-2xl shadow-xl z-50 overflow-hidden">
+                    <div className="px-4 py-3 border-b border-border">
+                      <p className="text-sm font-bold text-gray-900">System Admin</p>
+                      <p className="text-xs text-gray-400">admin@gams.gov.in</p>
+                      <span className="inline-block mt-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-100 text-purple-700">Super Admin</span>
+                    </div>
+                    <div className="py-1">
+                      <Link href="/manage/settings" className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-surface transition-colors" onClick={() => setUserMenuOpen(false)}>
+                        <Settings size={14} className="text-gray-400" /> Settings
+                      </Link>
+                      <Link href="/manage/users" className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-surface transition-colors" onClick={() => setUserMenuOpen(false)}>
+                        <Users size={14} className="text-gray-400" /> Manage Users
+                      </Link>
+                    </div>
+                    <div className="border-t border-border py-1">
+                      <form action={logoutAction}>
+                        <button type="submit" className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-danger hover:bg-red-50 transition-colors font-semibold">
+                          <LogOut size={14} /> Sign Out
+                        </button>
+                      </form>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -393,7 +427,7 @@ export default function ManageDashboard() {
           {/* ── Quick Stats ── */}
           <section>
             <h2 className="page-title mb-4">System Overview</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               <QuickStat
                 label="Pending Approvals"
                 value={stats.loaded ? stats.pendingApprovals.toLocaleString("en-IN") : "—"}
@@ -411,7 +445,7 @@ export default function ManageDashboard() {
               <QuickStat
                 label="Assets In Stock"
                 value={stats.loaded ? stats.assetsCount.toLocaleString("en-IN") : "—"}
-                sub="Total product instances"
+                sub="Total product instances tracked"
                 icon={<Package size={20} />}
                 variant="default"
               />
@@ -425,7 +459,7 @@ export default function ManageDashboard() {
               <QuickStat
                 label="Awaiting Rating"
                 value={stats.loaded ? stats.awaitingRating.toLocaleString("en-IN") : "—"}
-                sub="Post-event inspections"
+                sub="Post-event inspections due"
                 icon={<Star size={20} />}
                 variant="gold"
               />
