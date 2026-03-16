@@ -241,45 +241,41 @@ export default function WishlistPage() {
         return;
       }
 
-      // Fetch wishlist items joined with redistribution_listings + products
-      const { data: wishData } = await db
-        .from("wishlist_items")
-        .select(
-          `id, listing_id,
-           redistribution_listings (
-             listing_code, listed_price_paise, condition_rating,
-             products ( name, category )
-           )`
-        )
-        .eq("user_id", user.id)
-        .order("created_at", { ascending: false })
-        .limit(24);
+      // Read wishlist from localStorage
+      let storedWishlist: string[] = [];
+      try {
+        const raw = localStorage.getItem("gams_wishlist");
+        storedWishlist = raw ? JSON.parse(raw) : [];
+      } catch { storedWishlist = []; }
 
-      if (wishData && wishData.length > 0) {
-        setWishlistItems(
-          wishData
-            .filter((w) => w.redistribution_listings)
-            .map((w) => {
-              const listing = w.redistribution_listings as Record<string, unknown>;
-              const product = (listing?.products ?? {}) as Record<string, unknown>;
-              const pricePaise = (listing?.listed_price_paise as number) ?? 0;
-              const rating = (listing?.condition_rating as number) ?? 5;
+      if (storedWishlist.length > 0) {
+        // Fetch listing details from v_marketplace for stored listing codes
+        const { data: wishData } = await db
+          .from("v_marketplace")
+          .select("listing_code, product_name, category, listed_price_paise, condition_rating")
+          .in("listing_code", storedWishlist)
+          .limit(24);
+
+        if (wishData && wishData.length > 0) {
+          setWishlistItems(
+            wishData.map((r) => {
+              const pricePaise = r.listed_price_paise ?? 0;
               const price = Math.round(pricePaise / 100);
-              // Estimate MRP at ~28% above listing price
               const originalPrice = Math.round(price / 0.72);
+              const rating = r.condition_rating ?? 5;
               return {
-                id: w.id,
-                listing_id: String(w.listing_id ?? ""),
-                name: (product?.name as string) ?? "Government Asset",
-                category: (product?.category as string) ?? "Miscellaneous",
+                id: r.listing_code,
+                listing_id: r.listing_code,
+                name: r.product_name ?? "Government Asset",
+                category: r.category ?? "Miscellaneous",
                 price,
                 original_price: originalPrice,
                 rating,
-                condition:
-                  rating >= 8 ? "Excellent" : rating >= 6 ? "Good" : "Serviceable",
+                condition: rating >= 8 ? "Excellent" : rating >= 6 ? "Good" : "Serviceable",
               };
             })
-        );
+          );
+        }
       }
 
       // Fetch recommended items from marketplace view
@@ -297,7 +293,7 @@ export default function WishlistPage() {
             id: r.listing_code,
             name: r.product_name,
             category: r.category ?? "Asset",
-            price: Math.round(r.listed_price_paise / 100),
+            price: Math.round((r.listed_price_paise ?? 0) / 100),
             rating: r.condition_rating ?? 5,
           }))
         );

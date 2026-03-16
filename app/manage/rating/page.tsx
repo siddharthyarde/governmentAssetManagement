@@ -37,14 +37,14 @@ const RATINGS: RatingEntry[] = [
 const CONDITION_CLS = { Excellent: "text-green-600", Good: "text-blue-600", Serviceable: "text-yellow-600", Fair: "text-orange-600", Defective: "text-red-600" };
 
 const NAV_ITEMS = [
-  { href: "/", icon: LayoutDashboard, label: "Dashboard" },
-  { href: "/notifications", icon: Bell, label: "Notifications" },
-  { href: "/assets", icon: Package, label: "Asset Registry" },
-  { href: "/events", icon: Calendar, label: "Events" },
-  { href: "/rating", icon: Star, label: "Rate Assets" },
-  { href: "/defects", icon: AlertTriangle, label: "Defects" },
-  { href: "/approvals", icon: CheckCircle2, label: "Approvals" },
-  { href: "/analytics", icon: FileText, label: "Analytics" },
+  { href: "/manage", icon: LayoutDashboard, label: "Dashboard" },
+  { href: "/manage/notifications", icon: Bell, label: "Notifications" },
+  { href: "/manage/assets", icon: Package, label: "Asset Registry" },
+  { href: "/manage/events", icon: Calendar, label: "Events" },
+  { href: "/manage/rating", icon: Star, label: "Rate Assets" },
+  { href: "/manage/defects", icon: AlertTriangle, label: "Defects" },
+  { href: "/manage/approvals", icon: CheckCircle2, label: "Approvals" },
+  { href: "/manage/analytics", icon: FileText, label: "Analytics" },
 ];
 
 function StarRow({ rating }: { rating: number }) {

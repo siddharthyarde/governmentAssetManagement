@@ -40,6 +40,23 @@ interface NavSection {
   }[];
 }
 
+interface NotifItem {
+  id: string;
+  read: boolean;
+  icon: string;
+  title: string;
+  sub: string;
+  time: string;
+}
+
+interface EventListItem {
+  id: string;
+  name: string;
+  district: string | null;
+  state_code: string | null;
+  gov_level: string;
+}
+
 // ─── Sidebar Nav Data ─────────────────────────────────────────────────────────
 
 const NAV: NavSection[] = [
@@ -259,6 +276,28 @@ function ActivityRow({
   );
 }
 
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+function relativeTime(ts: string): string {
+  const diff = Date.now() - new Date(ts).getTime();
+  const mins = Math.floor(diff / 60_000);
+  if (mins < 60) return `${mins} min ago`;
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return `${hrs} hr ago`;
+  const days = Math.floor(hrs / 24);
+  return days === 1 ? "Yesterday" : `${days} days ago`;
+}
+
+function notifIcon(title: string): string {
+  const t = title.toLowerCase();
+  if (t.includes("company") || t.includes("approval")) return "🏢";
+  if (t.includes("scan") || t.includes("qr")) return "📍";
+  if (t.includes("institution")) return "🏛️";
+  if (t.includes("event")) return "📅";
+  if (t.includes("defect")) return "⚠️";
+  return "🔔";
+}
+
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
 export default function ManageDashboard() {
@@ -267,6 +306,9 @@ export default function ManageDashboard() {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [stats, setStats] = useState({
     pendingApprovals: 0,
+    pendingCompanies: 0,
+    pendingInstitutions: 0,
+    pendingProducts: 0,
     activeEvents: 0,
     assetsCount: 0,
     openDefects: 0,
@@ -274,6 +316,9 @@ export default function ManageDashboard() {
     todayScans: 0,
     loaded: false,
   });
+
+  const [activeEventsList, setActiveEventsList] = useState<EventListItem[]>([]);
+  const [notifItems, setNotifItems] = useState<NotifItem[]>([]);
 
   useEffect(() => {
     const db = createClient();
@@ -287,9 +332,14 @@ export default function ManageDashboard() {
       db.from("defects").select("*", { count: "exact", head: true }).eq("is_resolved", false),
       db.from("product_instances").select("*", { count: "exact", head: true }).eq("status", "pending_rating"),
       db.from("scans").select("*", { count: "exact", head: true }).gte("scanned_at", `${today}T00:00:00Z`),
-    ]).then(([cos, ins, pros, evts, assets, defects, rating, scans]) => {
+      db.from("events").select("id, name, district, state_code, gov_level").eq("status", "ongoing").limit(4),
+      db.from("notifications").select("id, title, body, is_read, created_at").order("created_at", { ascending: false }).limit(10),
+    ]).then(([cos, ins, pros, evts, assets, defects, rating, scans, evtList, notifs]) => {
       setStats({
         pendingApprovals: (cos.count ?? 0) + (ins.count ?? 0) + (pros.count ?? 0),
+        pendingCompanies: cos.count ?? 0,
+        pendingInstitutions: ins.count ?? 0,
+        pendingProducts: pros.count ?? 0,
         activeEvents: evts.count ?? 0,
         assetsCount: assets.count ?? 0,
         openDefects: defects.count ?? 0,
@@ -297,14 +347,19 @@ export default function ManageDashboard() {
         todayScans: scans.count ?? 0,
         loaded: true,
       });
+      setActiveEventsList((evtList.data ?? []) as EventListItem[]);
+      setNotifItems(
+        (notifs.data ?? []).map((n: { id: string; title: string; body: string; is_read: boolean; created_at: string }) => ({
+          id: n.id,
+          read: n.is_read,
+          icon: notifIcon(n.title),
+          title: n.title,
+          sub: n.body,
+          time: relativeTime(n.created_at),
+        }))
+      );
     });
   }, []);
-  const [notifItems, setNotifItems] = useState([
-    { id: 1, read: false, icon: "🏢", title: "New Company Registration",  sub: "ABC Exports Pvt Ltd awaiting approval",           time: "10 min ago" },
-    { id: 2, read: false, icon: "📍", title: "QR Code Scanned",          sub: "Asset #QR-5521 scanned at Warehouse B",           time: "32 min ago" },
-    { id: 3, read: false, icon: "🏛️", title: "Institution Pending",      sub: "7 institutions awaiting verification",            time: "1 hr ago"   },
-    { id: 4, read: true,  icon: "📅", title: "Event Scheduled",          sub: "National Surplus Asset Fair — 15 Mar 2026",       time: "Yesterday"  },
-  ]);
   const unreadCount = notifItems.filter((n) => !n.read).length;
 
   return (
@@ -539,10 +594,10 @@ export default function ManageDashboard() {
                   <Building2 size={18} className="text-saffron-600" />
                   <div>
                     <p className="text-sm font-semibold text-[#1A1A1A]">Company Approvals</p>
-                    <p className="text-xs text-[#7A7A7A]">3 pending review</p>
+                    <p className="text-xs text-[#7A7A7A]">{stats.loaded ? stats.pendingCompanies : "—"} pending review</p>
                   </div>
                 </div>
-                <span className="bg-saffron-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">3</span>
+                <span className="bg-saffron-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">{stats.loaded ? stats.pendingCompanies : "—"}</span>
               </Link>
 
               <Link href="/manage/institutions?status=pending" className="flex items-center justify-between p-3 rounded-xl bg-green-50 hover:bg-green-100 transition-colors group">
@@ -550,10 +605,10 @@ export default function ManageDashboard() {
                   <CheckCircle2 size={18} className="text-green-600" />
                   <div>
                     <p className="text-sm font-semibold text-[#1A1A1A]">Institution Verifications</p>
-                    <p className="text-xs text-[#7A7A7A]">7 awaiting documents</p>
+                    <p className="text-xs text-[#7A7A7A]">{stats.loaded ? stats.pendingInstitutions : "—"} awaiting documents</p>
                   </div>
                 </div>
-                <span className="bg-green-600 text-white text-xs font-bold px-2 py-0.5 rounded-full">7</span>
+                <span className="bg-green-600 text-white text-xs font-bold px-2 py-0.5 rounded-full">{stats.loaded ? stats.pendingInstitutions : "—"}</span>
               </Link>
 
               <Link href="/manage/assets?status=pending_approval" className="flex items-center justify-between p-3 rounded-xl bg-gold-50 hover:bg-gold-100 transition-colors group">
@@ -561,10 +616,10 @@ export default function ManageDashboard() {
                   <Package size={18} className="text-gold-600" />
                   <div>
                     <p className="text-sm font-semibold text-[#1A1A1A]">Product Approvals</p>
-                    <p className="text-xs text-[#7A7A7A]">2 listings to verify</p>
+                    <p className="text-xs text-[#7A7A7A]">{stats.loaded ? stats.pendingProducts : "—"} listings to verify</p>
                   </div>
                 </div>
-                <span className="bg-gold-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">2</span>
+                <span className="bg-gold-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">{stats.loaded ? stats.pendingProducts : "—"}</span>
               </Link>
 
               <Link href="/manage/defects?status=open" className="flex items-center justify-between p-3 rounded-xl bg-red-50 hover:bg-red-100 transition-colors group">
@@ -572,10 +627,10 @@ export default function ManageDashboard() {
                   <AlertTriangle size={18} className="text-danger" />
                   <div>
                     <p className="text-sm font-semibold text-[#1A1A1A]">Open Defects</p>
-                    <p className="text-xs text-[#7A7A7A]">₹4.2L repair cost total</p>
+                    <p className="text-xs text-[#7A7A7A]">Pending resolution</p>
                   </div>
                 </div>
-                <span className="bg-danger text-white text-xs font-bold px-2 py-0.5 rounded-full">38</span>
+                <span className="bg-danger text-white text-xs font-bold px-2 py-0.5 rounded-full">{stats.loaded ? stats.openDefects : "—"}</span>
               </Link>
             </div>
           </div>
@@ -592,25 +647,27 @@ export default function ManageDashboard() {
                 </Link>
               </div>
               <div className="space-y-3">
-                {[
-                  { name: "National Youth Festival 2026", location: "New Delhi", assets: "12,840", level: "Central" },
-                  { name: "Kochi State Cultural Fest", location: "Kerala", assets: "3,210", level: "State" },
-                  { name: "Pune District Sports Meet", location: "Maharashtra", assets: "870", level: "Municipal" },
-                  { name: "G20 Preparatory Meet", location: "Mumbai", assets: "5,480", level: "Central" },
-                ].map((event) => (
-                  <div key={event.name} className="flex items-center justify-between py-2 border-b border-border last:border-0">
-                    <div>
-                      <p className="text-sm font-medium text-[#1A1A1A] leading-tight">{event.name}</p>
-                      <p className="text-xs text-[#7A7A7A]">{event.location} · {event.assets} assets</p>
+                {!stats.loaded ? (
+                  <p className="text-sm text-[#7A7A7A] py-4 text-center">Loading…</p>
+                ) : activeEventsList.length === 0 ? (
+                  <p className="text-sm text-[#7A7A7A] py-4 text-center">No active events</p>
+                ) : activeEventsList.map((event) => {
+                  const lvl = event.gov_level.charAt(0).toUpperCase() + event.gov_level.slice(1);
+                  return (
+                    <div key={event.id} className="flex items-center justify-between py-2 border-b border-border last:border-0">
+                      <div>
+                        <p className="text-sm font-medium text-[#1A1A1A] leading-tight">{event.name}</p>
+                        <p className="text-xs text-[#7A7A7A]">{event.district ?? event.state_code}</p>
+                      </div>
+                      <span className={`badge text-[10px] ${
+                        event.gov_level === "central" ? "badge-saffron" :
+                        event.gov_level === "state"   ? "badge-active" : "badge-pending"
+                      }`}>
+                        {lvl}
+                      </span>
                     </div>
-                    <span className={`badge text-[10px] ${
-                      event.level === "Central" ? "badge-saffron" :
-                      event.level === "State"   ? "badge-active" : "badge-pending"
-                    }`}>
-                      {event.level}
-                    </span>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
 

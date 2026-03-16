@@ -57,14 +57,14 @@ const FORMAT_CLS: Record<string, string> = {
 };
 
 const NAV_ITEMS = [
-  { href: "/", icon: LayoutDashboard, label: "Dashboard" },
-  { href: "/notifications", icon: Bell, label: "Notifications" },
-  { href: "/assets", icon: Package, label: "Asset Registry" },
-  { href: "/analytics", icon: BarChart3, label: "Analytics" },
-  { href: "/reports", icon: FileText, label: "Reports" },
-  { href: "/audit", icon: Clock, label: "Audit Log" },
-  { href: "/approvals", icon: CheckCircle2, label: "Approvals" },
-  { href: "/settings", icon: Users, label: "Settings" },
+  { href: "/manage", icon: LayoutDashboard, label: "Dashboard" },
+  { href: "/manage/notifications", icon: Bell, label: "Notifications" },
+  { href: "/manage/assets", icon: Package, label: "Asset Registry" },
+  { href: "/manage/analytics", icon: BarChart3, label: "Analytics" },
+  { href: "/manage/reports", icon: FileText, label: "Reports" },
+  { href: "/manage/audit", icon: Clock, label: "Audit Log" },
+  { href: "/manage/approvals", icon: CheckCircle2, label: "Approvals" },
+  { href: "/manage/settings", icon: Users, label: "Settings" },
 ];
 
 export default function ReportsPage() {

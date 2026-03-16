@@ -264,7 +264,6 @@ async function setupPublicUser() {
 
   const user = await upsertAuthUser({
     email:     "siddharthyarde@gmail.com",
-    phone:     "+919999999999",
     password:  "GAMSCitizen@2026",
     full_name: "Siddharth Yarde",
   });

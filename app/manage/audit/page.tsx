@@ -65,14 +65,14 @@ const ACTION_META: Record<AuditAction, { label: string; icon: React.ElementType;
 const SEV_CLS = { info: "bg-blue-50 text-blue-600", warning: "bg-yellow-50 text-yellow-700", critical: "bg-red-100 text-red-700 font-bold" };
 
 const NAV_ITEMS = [
-  { href: "/", icon: LayoutDashboard, label: "Dashboard" },
-  { href: "/notifications", icon: Bell, label: "Notifications" },
-  { href: "/assets", icon: Package, label: "Asset Registry" },
-  { href: "/analytics", icon: BarChart3, label: "Analytics" },
-  { href: "/reports", icon: FileText, label: "Reports" },
-  { href: "/audit", icon: Clock, label: "Audit Log" },
-  { href: "/approvals", icon: CheckCircle2, label: "Approvals" },
-  { href: "/settings", icon: Settings, label: "Settings" },
+  { href: "/manage", icon: LayoutDashboard, label: "Dashboard" },
+  { href: "/manage/notifications", icon: Bell, label: "Notifications" },
+  { href: "/manage/assets", icon: Package, label: "Asset Registry" },
+  { href: "/manage/analytics", icon: BarChart3, label: "Analytics" },
+  { href: "/manage/reports", icon: FileText, label: "Reports" },
+  { href: "/manage/audit", icon: Clock, label: "Audit Log" },
+  { href: "/manage/approvals", icon: CheckCircle2, label: "Approvals" },
+  { href: "/manage/settings", icon: Settings, label: "Settings" },
 ];
 
 export default function AuditPage() {

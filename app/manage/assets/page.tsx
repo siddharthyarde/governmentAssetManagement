@@ -68,13 +68,13 @@ const CONDITION_CLS: Record<AssetCondition, string> = {
 };
 
 const NAV_ITEMS = [
-  { href: "/", icon: LayoutDashboard, label: "Dashboard" },
-  { href: "/notifications", icon: Bell, label: "Notifications" },
-  { href: "/assets", icon: Package, label: "Asset Registry" },
-  { href: "/companies", icon: Building2, label: "Companies" },
-  { href: "/events", icon: Calendar, label: "Events" },
-  { href: "/approvals", icon: CheckCircle2, label: "Approvals" },
-  { href: "/analytics", icon: FileText, label: "Analytics" },
+  { href: "/manage", icon: LayoutDashboard, label: "Dashboard" },
+  { href: "/manage/notifications", icon: Bell, label: "Notifications" },
+  { href: "/manage/assets", icon: Package, label: "Asset Registry" },
+  { href: "/manage/companies", icon: Building2, label: "Companies" },
+  { href: "/manage/events", icon: Calendar, label: "Events" },
+  { href: "/manage/approvals", icon: CheckCircle2, label: "Approvals" },
+  { href: "/manage/analytics", icon: FileText, label: "Analytics" },
 ];
 
 export default function AssetsPage() {

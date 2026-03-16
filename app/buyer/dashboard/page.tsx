@@ -308,21 +308,23 @@ export default function BuyerDashboardPage({
   const [institutionStatus, setInstitutionStatus] = useState<InstitutionStatus>("pending_review");
   const [listings, setListings] = useState(MOCK_LISTINGS);
   const [myOrders, setMyOrders] = useState(MOCK_ORDERS);
+  const [marketCount, setMarketCount] = useState(0);
+  const [ordersCount, setOrdersCount] = useState(0);
   const isJustRegistered = searchParams?.registered === "1";
 
   useEffect(() => {
     const db = createClient();
     db.auth.getUser().then(async ({ data: { user } }) => {
       if (!user) return;
-      const { data: iu } = await db.from("institution_users")
-        .select("institution_id").eq("user_id", user.id).single();
-      if (iu) {
-        const { data: institution } = await db.from("institutions")
-          .select("name, status").eq("id", iu.institution_id).single();
-        if (institution) {
-          setInstitutionName(institution.name);
-          setInstitutionStatus(institution.status as InstitutionStatus);
-        }
+      const { data: instData } = await db
+        .from("institution_users")
+        .select("institutions (id, name, status, institution_type)")
+        .eq("user_id", user.id)
+        .single();
+      if (instData?.institutions) {
+        const inst = instData.institutions as unknown as { id: string; name: string; status: string; institution_type: string };
+        setInstitutionName(inst.name);
+        setInstitutionStatus(inst.status as InstitutionStatus);
       }
       const { data: mktItems } = await db.from("v_marketplace")
         .select("listing_code, product_name, category, condition_rating, quantity_available, listed_price_paise, original_price_paise, discount_pct")
@@ -348,10 +350,19 @@ export default function BuyerDashboardPage({
           };
         }));
       }
+      const { count: mktCount } = await db
+        .from("v_marketplace")
+        .select("*", { count: "exact", head: true });
+      setMarketCount(mktCount ?? 0);
       const { data: ords } = await db.from("orders")
         .select("order_number, status, total_paise, created_at, delivered_at, notes")
-        .eq("user_id", user.id)
+        .eq("buyer_id", user.id)
         .order("created_at", { ascending: false }).limit(3);
+      const { count: ordCount } = await db
+        .from("orders")
+        .select("*", { count: "exact", head: true })
+        .eq("buyer_id", user.id);
+      setOrdersCount(ordCount ?? 0);
       if (ords && ords.length > 0) {
         setMyOrders(ords.map((o) => ({
           id: o.order_number,
@@ -543,10 +554,10 @@ export default function BuyerDashboardPage({
 
           {/* ── Stats row ─────────────────────────────────────────────────── */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-            <StatCard label="Orders Placed"        value="3"        sub="2 active"                  icon={<ClipboardList size={18} />}  accent="#138808" />
-            <StatCard label="Items Received"        value="700"      sub="From 1 delivered order"    icon={<Package size={18} />}        accent="#E07B00" />
-            <StatCard label="Pending Deliveries"    value="2"        sub="Expected within 30 days"   icon={<Truck size={18} />}          accent="#1A3A6B" />
-            <StatCard label="Total Savings"         value="₹12.4L"   sub="vs. original procurement"  icon={<IndianRupee size={18} />}    accent="#C9960C" />
+            <StatCard label="Orders Placed"       value={ordersCount}  sub={ordersCount === 1 ? "1 order placed" : `${ordersCount} orders placed`}  icon={<ClipboardList size={18} />}  accent="#138808" />
+            <StatCard label="Available Listings"  value={marketCount}  sub="In marketplace now"                                                      icon={<Package size={18} />}        accent="#E07B00" />
+            <StatCard label="Pending Deliveries"  value="2"            sub="Expected within 30 days"                                                 icon={<Truck size={18} />}          accent="#1A3A6B" />
+            <StatCard label="Total Savings"       value="₹12.4L"       sub="vs. original procurement"                                                icon={<IndianRupee size={18} />}    accent="#C9960C" />
           </div>
 
           {/* ── Bento row 1: Featured Listings + My Orders ────────────────── */}
@@ -623,7 +634,7 @@ export default function BuyerDashboardPage({
                   href="/buyer/dashboard/marketplace"
                   className="text-xs font-semibold text-green-600 hover:text-green-700 flex items-center gap-1"
                 >
-                  View all 24+ available listings <ArrowRight size={12} />
+                  View all {marketCount > 0 ? `${marketCount}` : "all"} available listings <ArrowRight size={12} />
                 </Link>
               </div>
             </div>

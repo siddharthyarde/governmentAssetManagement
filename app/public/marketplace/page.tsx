@@ -91,7 +91,7 @@ type MarketplaceViewRow = {
   product_name: string;
   product_name_hi: string | null;
   category: string;
-  product_images: unknown;
+  product_images: Array<{ url: string; alt: string; is_primary: boolean }> | null;
   brand: string | null;
 };
 
@@ -119,7 +119,13 @@ function mapMarketplaceRow(row: MarketplaceViewRow): Listing {
     state: "—",
     ministry: "—",
     listedDate: new Date().toISOString().split("T")[0],
-    images: [],
+    images: (() => {
+      const imgs = row.product_images;
+      if (Array.isArray(imgs) && imgs.length > 0) {
+        return imgs.map((img: { url: string }) => img.url);
+      }
+      return [];
+    })(),
     verified: true,
     rating: 4.5,
     reviewCount: 0,
@@ -171,9 +177,20 @@ function ListingCard({ listing }: { listing: Listing }) {
 
   return (
     <div className="bg-white border border-border rounded-2xl overflow-hidden hover:shadow-md transition-shadow group flex flex-col">
-      {/* Placeholder image area */}
-      <div className="h-36 bg-surface border-b border-border flex items-center justify-center relative">
-        <Package size={40} className="text-gray-200" />
+      {/* Image area */}
+      <div className="h-36 bg-surface border-b border-border relative overflow-hidden">
+        {listing.images.length > 0 ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={listing.images[0]}
+            alt={listing.name}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center">
+            <Package size={40} className="text-gray-200" />
+          </div>
+        )}
         <div className="absolute top-3 left-3 flex flex-col gap-1.5">
           <span className={`inline-flex text-[10px] font-bold px-2 py-0.5 rounded-full border ${cc.bg} ${cc.text} ${cc.border}`}>
             {listing.condition}

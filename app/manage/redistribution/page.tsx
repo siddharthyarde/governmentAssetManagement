@@ -75,14 +75,14 @@ const STATUS_META: Record<RedistStatus, { label: string; cls: string; icon: Reac
 };
 
 const NAV_ITEMS = [
-  { href: "/", icon: LayoutDashboard, label: "Dashboard" },
-  { href: "/notifications", icon: Bell, label: "Notifications" },
-  { href: "/assets", icon: Package, label: "Asset Registry" },
-  { href: "/warehouse", icon: Building2, label: "Warehouse" },
-  { href: "/redistribution", icon: ArrowRightLeft, label: "Redistribution" },
-  { href: "/defects", icon: AlertTriangle, label: "Defects" },
-  { href: "/approvals", icon: CheckCircle2, label: "Approvals" },
-  { href: "/reports", icon: FileText, label: "Reports" },
+  { href: "/manage", icon: LayoutDashboard, label: "Dashboard" },
+  { href: "/manage/notifications", icon: Bell, label: "Notifications" },
+  { href: "/manage/assets", icon: Package, label: "Asset Registry" },
+  { href: "/manage/warehouse", icon: Building2, label: "Warehouse" },
+  { href: "/manage/redistribution", icon: ArrowRightLeft, label: "Redistribution" },
+  { href: "/manage/defects", icon: AlertTriangle, label: "Defects" },
+  { href: "/manage/approvals", icon: CheckCircle2, label: "Approvals" },
+  { href: "/manage/reports", icon: FileText, label: "Reports" },
 ];
 
 export default function RedistributionPage() {

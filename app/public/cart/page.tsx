@@ -66,7 +66,7 @@ export default function CartPage() {
               listingId: l.listing_code,
               name: l.product_name,
               condition: cond,
-              listingPrice: Math.round(l.listed_price_paise / 100),
+              listingPrice: Math.round((l.listed_price_paise ?? 0) / 100),
               qty: 1,
               maxQty: Math.min(l.quantity_available, 100),
             };

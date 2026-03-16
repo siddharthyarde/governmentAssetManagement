@@ -40,15 +40,15 @@ interface ScanHistoryItem {
 }
 
 const NAV_ITEMS = [
-  { href: "/", icon: LayoutDashboard, label: "Dashboard" },
-  { href: "/notifications", icon: Bell, label: "Notifications" },
-  { href: "/assets", icon: Package, label: "Asset Registry" },
-  { href: "/warehouse", icon: Warehouse, label: "Warehouse" },
-  { href: "/scan", icon: QrCode, label: "Scan QR" },
-  { href: "/companies", icon: Building2, label: "Companies" },
-  { href: "/events", icon: Calendar, label: "Events" },
-  { href: "/approvals", icon: CheckCircle2, label: "Approvals" },
-  { href: "/analytics", icon: FileText, label: "Analytics" },
+  { href: "/manage", icon: LayoutDashboard, label: "Dashboard" },
+  { href: "/manage/notifications", icon: Bell, label: "Notifications" },
+  { href: "/manage/assets", icon: Package, label: "Asset Registry" },
+  { href: "/manage/warehouse", icon: Warehouse, label: "Warehouse" },
+  { href: "/manage/scan", icon: QrCode, label: "Scan QR" },
+  { href: "/manage/companies", icon: Building2, label: "Companies" },
+  { href: "/manage/events", icon: Calendar, label: "Events" },
+  { href: "/manage/approvals", icon: CheckCircle2, label: "Approvals" },
+  { href: "/manage/analytics", icon: FileText, label: "Analytics" },
 ];
 
 // â”€â”€â”€ Inspector Panel â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€

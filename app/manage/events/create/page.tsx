@@ -42,22 +42,22 @@ const INDIAN_STATES = [
 ];
 
 const NAV = [
-  { href: "/",              icon: LayoutDashboard, label: "Dashboard" },
-  { href: "/assets",        icon: Package,         label: "Assets" },
-  { href: "/companies",     icon: Building2,       label: "Companies" },
-  { href: "/institutions",  icon: Building2,       label: "Institutions" },
-  { href: "/users",         icon: Users,           label: "Users" },
-  { href: "/events",        icon: Calendar,        label: "Events" },
-  { href: "/approvals",     icon: CheckCircle2,    label: "Approvals" },
-  { href: "/analytics",     icon: FileText,        label: "Analytics" },
-  { href: "/defects",       icon: AlertTriangle,   label: "Defects" },
-  { href: "/rating",        icon: Star,            label: "Ratings" },
-  { href: "/audit",         icon: ClipboardList,   label: "Audit" },
-  { href: "/warehouse",     icon: Warehouse,       label: "Warehouse" },
-  { href: "/redistribution",icon: MapPin,          label: "Redistribution" },
-  { href: "/scan",          icon: Scan,            label: "Scan" },
-  { href: "/reports",       icon: FileText,        label: "Reports" },
-  { href: "/settings",      icon: ShieldAlert,     label: "Settings" },
+  { href: "/manage",              icon: LayoutDashboard, label: "Dashboard" },
+  { href: "/manage/assets",        icon: Package,         label: "Assets" },
+  { href: "/manage/companies",     icon: Building2,       label: "Companies" },
+  { href: "/manage/institutions",  icon: Building2,       label: "Institutions" },
+  { href: "/manage/users",         icon: Users,           label: "Users" },
+  { href: "/manage/events",        icon: Calendar,        label: "Events" },
+  { href: "/manage/approvals",     icon: CheckCircle2,    label: "Approvals" },
+  { href: "/manage/analytics",     icon: FileText,        label: "Analytics" },
+  { href: "/manage/defects",       icon: AlertTriangle,   label: "Defects" },
+  { href: "/manage/rating",        icon: Star,            label: "Ratings" },
+  { href: "/manage/audit",         icon: ClipboardList,   label: "Audit" },
+  { href: "/manage/warehouse",     icon: Warehouse,       label: "Warehouse" },
+  { href: "/manage/redistribution",icon: MapPin,          label: "Redistribution" },
+  { href: "/manage/scan",          icon: Scan,            label: "Scan" },
+  { href: "/manage/reports",       icon: FileText,        label: "Reports" },
+  { href: "/manage/settings",      icon: ShieldAlert,     label: "Settings" },
 ];
 
 // ─── Page ─────────────────────────────────────────────────────────────────────

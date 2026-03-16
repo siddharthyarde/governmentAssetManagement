@@ -371,11 +371,11 @@ export default function CompaniesPage() {
         </div>
         <nav className="flex-1 py-3 px-3 flex flex-col gap-0.5">
           {[
-            { href: "/",            icon: LayoutDashboard, label: "Dashboard"   },
-            { href: "/approvals",   icon: CheckCircle2,    label: "Approvals"   },
-            { href: "/events",      icon: Calendar,        label: "Events"      },
-            { href: "/analytics",   icon: FileText,        label: "Analytics"   },
-            { href: "/users",       icon: Users,           label: "Users & Roles" },
+            { href: "/manage",            icon: LayoutDashboard, label: "Dashboard"   },
+            { href: "/manage/approvals",   icon: CheckCircle2,    label: "Approvals"   },
+            { href: "/manage/events",      icon: Calendar,        label: "Events"      },
+            { href: "/manage/analytics",   icon: FileText,        label: "Analytics"   },
+            { href: "/manage/users",       icon: Users,           label: "Users & Roles" },
           ].map(({ href, icon: Icon, label }) => (
             <Link key={href} href={href} className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-gray-500 hover:bg-surface">
               <Icon size={15} /> {label}

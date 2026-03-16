@@ -115,7 +115,7 @@ export default function ManageAssetsNewPage() {
       action:      "asset.manual_register",
       entity_type: "product_instances",
       new_data:    { instance_code, product_id: form.product_id, status: form.asset_status, company_id: selectedProduct.company_id },
-    }).catch(() => {});
+    });
 
     setStatus("success");
   }

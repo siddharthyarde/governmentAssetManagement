@@ -69,6 +69,7 @@ type DetailListing = {
   reviewCount:      number;
   qrCertified:      boolean;
   description:      string;
+  images:    string[];
   specs:     { label: string; value: string }[];
   timeline:  { label: string; date: string; done: boolean }[];
   reviews:   { author: string; rating: number; comment: string; date: string }[];
@@ -85,6 +86,7 @@ type MktViewRow = {
   category:            string;
   brand:               string | null;
   specifications:      Record<string, string> | null;
+  product_images:      Array<{ url: string; alt: string; is_primary: boolean }> | null;
 };
 
 type RlDatesRow = {
@@ -516,6 +518,13 @@ export default function ListingDetailPage() {
         qrCertified: true,
         description: "",
         specs,
+        images: (() => {
+          const imgs = row.product_images;
+          if (Array.isArray(imgs) && imgs.length > 0) {
+            return imgs.map((img: { url: string }) => img.url);
+          }
+          return [];
+        })(),
         timeline: [
           { label: "Listed for Redistribution", date: formatDate(rl?.listed_at ?? null), done: true },
         ],
@@ -587,8 +596,19 @@ export default function ListingDetailPage() {
 
             {/* Image / placeholder */}
             <div className="bg-white border border-border rounded-2xl overflow-hidden">
-              <div className="h-56 md:h-72 bg-surface flex items-center justify-center relative">
-                <Package size={64} className="text-gray-200" />
+              <div className="h-56 md:h-72 bg-surface relative overflow-hidden">
+                {listing.images.length > 0 ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={listing.images[0]}
+                    alt={listing.name}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <Package size={64} className="text-gray-200" />
+                  </div>
+                )}
                 <div className="absolute top-4 left-4 flex flex-col gap-2">
                   <span className={`inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full border ${cc.bg} ${cc.text} ${cc.border}`}>
                     {listing.condition}

@@ -295,8 +295,8 @@ export default function ViewerDashboard() {
       db.from("product_instances").select("*", { count: "exact", head: true }).eq("status", "pending_rating"),
       db.from("scans").select("*", { count: "exact", head: true }).gte("scanned_at", `${today}T00:00:00Z`),
       // Asset status breakdown
-      db.from("product_instances").select("*", { count: "exact", head: true }).eq("status", "in_warehouse"),
-      db.from("product_instances").select("*", { count: "exact", head: true }).eq("status", "at_event"),
+      db.from("product_instances").select("*", { count: "exact", head: true }).eq("status", "in_stock"),
+      db.from("product_instances").select("*", { count: "exact", head: true }).eq("status", "deployed"),
       db.from("product_instances").select("*", { count: "exact", head: true }).eq("status", "redistributed"),
       db.from("product_instances").select("*", { count: "exact", head: true }).eq("status", "condemned"),
       // Active events list

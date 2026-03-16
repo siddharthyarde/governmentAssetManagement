@@ -251,18 +251,19 @@ export default function CompanyDashboardPage({
     const db = createClient();
     db.auth.getUser().then(async ({ data: { user } }) => {
       if (!user) return;
-      const { data: cu } = await db.from("company_users")
-        .select("company_id").eq("user_id", user.id).single();
-      if (!cu) return;
-      const { data: company } = await db.from("companies")
-        .select("legal_name, status").eq("id", cu.company_id).single();
-      if (company) {
-        setCompanyName(company.legal_name);
-        setCompanyStatus(company.status as CompanyStatus);
-      }
+      const { data: coData } = await db
+        .from("company_users")
+        .select("companies (id, trade_name, legal_name, status, company_code)")
+        .eq("user_id", user.id)
+        .single();
+      if (!coData?.companies) return;
+      const company = coData.companies as unknown as { id: string; trade_name: string | null; legal_name: string; status: string; company_code: string };
+      setCompanyName(company.trade_name ?? company.legal_name);
+      setCompanyStatus(company.status as CompanyStatus);
+      const companyId = company.id;
       const { data: prods } = await db.from("products")
         .select("product_code, name, status, created_at")
-        .eq("company_id", cu.company_id)
+        .eq("company_id", companyId)
         .order("created_at", { ascending: false }).limit(5);
       setProducts((prods ?? []).map((p) => ({
         id: p.product_code,
@@ -276,9 +277,9 @@ export default function CompanyDashboardPage({
 
       // Real stat counts
       const [{ count: total }, { count: pending }, { count: approved }] = await Promise.all([
-        db.from("products").select("*", { count: "exact", head: true }).eq("company_id", cu.company_id),
-        db.from("products").select("*", { count: "exact", head: true }).eq("company_id", cu.company_id).eq("status", "pending_approval"),
-        db.from("products").select("*", { count: "exact", head: true }).eq("company_id", cu.company_id).eq("status", "approved"),
+        db.from("products").select("*", { count: "exact", head: true }).eq("company_id", companyId),
+        db.from("products").select("*", { count: "exact", head: true }).eq("company_id", companyId).eq("status", "pending_approval"),
+        db.from("products").select("*", { count: "exact", head: true }).eq("company_id", companyId).eq("status", "approved"),
       ]);
       setStatProducts(total ?? 0);
       setStatPending(pending ?? 0);

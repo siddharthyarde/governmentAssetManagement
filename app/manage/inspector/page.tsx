@@ -222,7 +222,7 @@ export default function InspectorDashboard() {
     Promise.all([
       db.from("product_instances").select("*", { count: "exact", head: true }).eq("status", "pending_rating"),
       db.from("product_instances").select("*", { count: "exact", head: true })
-        .eq("status", "rated")
+        .gte("condition_rating", 1)
         .gte("updated_at", `${today}T00:00:00Z`),
       db.from("defects").select("*", { count: "exact", head: true }).eq("is_resolved", false),
       db.from("events").select("*", { count: "exact", head: true })
@@ -275,7 +275,7 @@ export default function InspectorDashboard() {
     const db = createClient();
     await db
       .from("product_instances")
-      .update({ condition_rating: rating, status: "rated" })
+      .update({ condition_rating: rating, status: "in_stock" })
       .eq("id", assetId);
     setSubmitting((prev) => ({ ...prev, [assetId]: false }));
     setSubmitted((prev) => ({ ...prev, [assetId]: true }));

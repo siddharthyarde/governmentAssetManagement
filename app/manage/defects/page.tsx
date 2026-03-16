@@ -53,14 +53,14 @@ const SEV_META: Record<DefectSeverity, { cls: string; dot: string }> = {
 };
 
 const NAV_ITEMS = [
-  { href: "/", icon: LayoutDashboard, label: "Dashboard" },
-  { href: "/notifications", icon: Bell, label: "Notifications" },
-  { href: "/assets", icon: Package, label: "Asset Registry" },
-  { href: "/events", icon: Calendar, label: "Events" },
-  { href: "/rating", icon: Star, label: "Rate Assets" },
-  { href: "/defects", icon: AlertTriangle, label: "Defects" },
-  { href: "/approvals", icon: CheckCircle2, label: "Approvals" },
-  { href: "/reports", icon: FileText, label: "Reports" },
+  { href: "/manage", icon: LayoutDashboard, label: "Dashboard" },
+  { href: "/manage/notifications", icon: Bell, label: "Notifications" },
+  { href: "/manage/assets", icon: Package, label: "Asset Registry" },
+  { href: "/manage/events", icon: Calendar, label: "Events" },
+  { href: "/manage/rating", icon: Star, label: "Rate Assets" },
+  { href: "/manage/defects", icon: AlertTriangle, label: "Defects" },
+  { href: "/manage/approvals", icon: CheckCircle2, label: "Approvals" },
+  { href: "/manage/reports", icon: FileText, label: "Reports" },
 ];
 
 const NEXT_STATUS: Partial<Record<DefectStatus, DefectStatus>> = {

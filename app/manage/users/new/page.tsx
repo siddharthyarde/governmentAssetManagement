@@ -10,15 +10,12 @@ import { createClient } from "@gams/lib/supabase/client";
 
 const ROLES = [
   { value: "super_admin", label: "Super Admin", desc: "Full access to all portals and settings" },
-  { value: "ministry_admin", label: "Ministry Admin", desc: "Manage ministry-level assets, events, companies" },
-  { value: "district_officer", label: "District Officer", desc: "District-level event and asset management" },
-  { value: "inspector", label: "Inspector / Auditor", desc: "Asset condition rating and defect reporting" },
-  { value: "warehouse_manager", label: "Warehouse Manager", desc: "Inventory, stock management, QR scanning" },
-  { value: "event_coordinator", label: "Event Coordinator", desc: "Event creation and asset assignment only" },
-  { value: "redistribution_officer", label: "Redistribution Officer", desc: "Manage redistribution listings" },
-  { value: "finance_officer", label: "Finance Officer", desc: "Payment records, reports, audit logs" },
-  { value: "data_entry", label: "Data Entry Operator", desc: "Product and asset data entry only" },
-  { value: "viewer", label: "Viewer / Read-Only", desc: "View-only access, no data modification" },
+  { value: "gov_admin", label: "Ministry Admin", desc: "Manage ministry-level assets and events" },
+  { value: "event_manager", label: "Event Manager", desc: "Event creation and asset assignment only" },
+  { value: "inspector", label: "Inspector", desc: "Asset condition rating and defect reporting" },
+  { value: "volunteer", label: "Volunteer", desc: "QR scanning at events" },
+  { value: "warehouse_officer", label: "Warehouse Officer", desc: "Inventory and stock management" },
+  { value: "auditor", label: "Auditor / Viewer", desc: "Read-only access, no data modification" },
 ];
 
 const MINISTRIES = [
@@ -47,7 +44,7 @@ export default function ManageUsersNewPage() {
     full_name: "",
     email: "",
     password: "",
-    role: "viewer",
+    role: "auditor",
     ministry: "Ministry of Finance",
     department: "",
     employee_id: "",
@@ -89,11 +86,13 @@ export default function ManageUsersNewPage() {
       const { error: profileErr } = await db.from("user_profiles").upsert({
         id: data.user.id,
         full_name: form.full_name,
-        role: form.role,
+        email: form.email,
+        role: form.role as "super_admin" | "gov_admin" | "event_manager" | "inspector" | "volunteer" | "warehouse_officer" | "auditor",
+        gov_level: "central" as const,
         ministry: form.ministry,
         department: form.department || null,
         employee_id: form.employee_id || null,
-        phone: form.phone || null,
+        is_active: true,
       });
       if (profileErr) {
         setError(profileErr.message);

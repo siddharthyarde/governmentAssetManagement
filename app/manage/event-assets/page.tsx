@@ -44,14 +44,14 @@ const STATUS_META = {
 };
 
 const NAV_ITEMS = [
-  { href: "/", icon: LayoutDashboard, label: "Dashboard" },
-  { href: "/notifications", icon: Bell, label: "Notifications" },
-  { href: "/assets", icon: Package, label: "Asset Registry" },
-  { href: "/warehouse", icon: Warehouse, label: "Warehouse" },
-  { href: "/events", icon: Calendar, label: "Events" },
-  { href: "/event-assets", icon: ClipboardList, label: "Event Assets" },
-  { href: "/approvals", icon: CheckCircle2, label: "Approvals" },
-  { href: "/analytics", icon: FileText, label: "Analytics" },
+  { href: "/manage", icon: LayoutDashboard, label: "Dashboard" },
+  { href: "/manage/notifications", icon: Bell, label: "Notifications" },
+  { href: "/manage/assets", icon: Package, label: "Asset Registry" },
+  { href: "/manage/warehouse", icon: Warehouse, label: "Warehouse" },
+  { href: "/manage/events", icon: Calendar, label: "Events" },
+  { href: "/manage/event-assets", icon: ClipboardList, label: "Event Assets" },
+  { href: "/manage/approvals", icon: CheckCircle2, label: "Approvals" },
+  { href: "/manage/analytics", icon: FileText, label: "Analytics" },
 ];
 
 export default function EventAssetsPage() {

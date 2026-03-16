@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import {
   LayoutDashboard, Package, Calendar, Building2, QrCode, Star,
   FileText, Users, AlertTriangle, Scan, Bell, Settings, ClipboardList,
-  Warehouse, BarChart3, Menu, X, LogOut, ChevronDown,
+  Warehouse, BarChart3, Menu, X, LogOut, ChevronDown, CheckCircle2,
 } from "lucide-react";
 import { logoutAction } from "../(auth)/actions";
 
@@ -44,6 +44,7 @@ const FULL_NAV: NavSection[] = [
       { icon: Building2,   label: "Companies",    href: "/manage/companies",    badge: 3 },
       { icon: Users,       label: "Users & Roles",href: "/manage/users" },
       { icon: LayoutDashboard, label: "Institutions", href: "/manage/institutions", badge: 7 },
+      { icon: CheckCircle2, label: "Approvals",   href: "/manage/approvals",    badge: 3 },
     ],
   },
   {
